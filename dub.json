@@ -7,7 +7,7 @@
     "license": "BSD 3-clause",
     "targetType": "library",
     "dependencies": {
-        "vibe-d": "~>0.7.25"
+        "vibe-d": "~>0.8.6"
     },
     "configurations": [
         { "name": "library",
@@ -18,7 +18,7 @@
           "sourcePaths": ["tests"],
           "mainSourceFile": "tests/ut.d",
           "dependencies": {
-              "unit-threaded": "~>0.4.10"
+              "unit-threaded": "~>0.10.4"
           },
           "excludedSourceFiles": ["source/cucumber/app.d"],
           "versions": ["VibeCustomMain"]
