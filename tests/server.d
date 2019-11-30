@@ -1,5 +1,6 @@
 module tests.server;
 
+import std.conv;
 import unit_threaded;
 import cucumber.server;
 import vibe.data.json;
@@ -71,7 +72,7 @@ void testMatchesDetails() {
 
         shouldEqual(json[1][0]["id"].to!int, 1);
         shouldEqual(json[1][0]["args"].length.to!int, 0);
-        shouldEqual(json[1][0]["source"].to!string, "tests.server.match1:19");
+        shouldEqual(json[1][0]["source"].to!string, "tests.server.match1:21");
         shouldEqual(json[1][0]["regexp"].to!string, "^we're wired$");
     }
     {
@@ -84,7 +85,7 @@ void testMatchesDetails() {
 
         shouldEqual(json[1][0]["id"].to!int, 2);
         shouldEqual(json[1][0]["args"].length.to!int, 0);
-        shouldEqual(json[1][0]["source"].to!string, "tests.server.match2:24");
+        shouldEqual(json[1][0]["source"].to!string, "tests.server.match2:26");
         shouldEqual(json[1][0]["regexp"].to!string, "^2nd match$");
     }
 }

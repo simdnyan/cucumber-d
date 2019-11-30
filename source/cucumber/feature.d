@@ -6,6 +6,7 @@ import cucumber.reflection;
 import std.regex;
 import std.conv;
 import std.algorithm;
+import std.string;
 import std.traits;
 import std.encoding: sanitize;
 

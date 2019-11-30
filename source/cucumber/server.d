@@ -42,7 +42,7 @@ private void handleTcpRequest(ModuleNames...)(TCPConnection tcpConnection, in st
 }
 
 string handleRequest(ModuleNames...)(string request, in DetailsFlag details = No.details) {
-    import cucumber.feature: sanitize;
+    import std.encoding: sanitize;
 
     debug writeln("Request: ", request);
     const fail = `["fail"]`;
