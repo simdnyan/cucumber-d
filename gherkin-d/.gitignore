@@ -1,5 +1,5 @@
-cucumber-d*
-bin/cucumber
+bin/gherkin-d
+gherkin-d*
 
 ### https://raw.github.com/github/gitignore/dc0ca6d8d5e61dae1bd051f9a99c1414890069f6/D.gitignore
 

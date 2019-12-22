@@ -1,0 +1,15 @@
+{
+	"description": "A simple cucumber sample application.",
+	"name": "calculator",
+	"targetName": "bin/cucumber",
+	"targetType": "executable",
+	"dependencies": {
+		"cucumber-d": {"path": "../../"},
+		"unit-threaded": "*"
+	},
+	"sourcePaths":
+	[
+		"features",
+		"source"
+	]
+}

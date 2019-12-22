@@ -1,0 +1,22 @@
+{
+	"authors": [
+		"Yoshinori Shimada"
+	],
+	"description": "A simple cucumber example with httpbin.",
+	"license": "proprietary",
+	"name": "httpbin-cucumber-example",
+	"exculudedSourcePaths": ["features/*"],
+	"sourcePaths": [
+		"features/"
+	],
+	"excludedSourceFiles": [
+		"source/*"
+	],
+	"targetName": "bin/cucumber",
+	"targetType": "executable",
+	"dependencies": {
+		"cucumber-d": {"path": "../../"},
+		"unit-threaded:assertions": "*",
+		"requests": "~>1.0.9"
+	}
+}
