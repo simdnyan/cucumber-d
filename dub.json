@@ -1,27 +1,17 @@
 {
-    "name": "unencumbered",
-    "description": "Support for Cucumber to write step descriptions in D",
-    "copyright": "Copyright (C) 2014 Me. All rights reserved.",
-    "homepage": "https://github.com/atilaneves/unencumbered",
-    "authors": ["Atila Neves"],
-    "license": "BSD 3-clause",
-    "targetType": "library",
-    "dependencies": {
-        "vibe-d": "~>0.8.6"
-    },
-    "configurations": [
-        { "name": "library",
-          "versions": ["VibeDefaultMain"]
-        },
-        { "name": "unittest",
-          "targetType": "executable",
-          "sourcePaths": ["tests"],
-          "mainSourceFile": "tests/ut.d",
-          "dependencies": {
-              "unit-threaded": "~>0.10.4"
-          },
-          "excludedSourceFiles": ["source/cucumber/app.d"],
-          "versions": ["VibeCustomMain"]
-        }
-    ]
+	"authors": [
+		"Atila Neves",
+		"Yoshinori Shimada"
+	],
+	"copyright": "Copyright © 2014, Me. All rights reserved.",
+	"homepage": "https://github.com/simdnyan/cucumber-d",
+	"dependencies": {
+		":gherkin-d": "*"
+	},
+	"description": "Cucumber for D.",
+	"license": "BSD 3-clause",
+	"name": "cucumber-d",
+	"subPackages": [
+		"gherkin-d"
+	]
 }
