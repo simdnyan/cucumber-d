@@ -1,0 +1,33 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/example_token_multiple.feature",
+    "id": "example-token-used-multiple-times",
+    "keyword": "Feature",
+    "name": "Example token used multiple times",
+    "description": "",
+    "line": 1,
+    "elements": [
+      {
+        "id": "example-token-used-multiple-times;token-used-twice-in-a-single-step;;2",
+        "keyword": "Scenario Outline",
+        "name": "Token used twice in a single step",
+        "description": "",
+        "line": 8,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "usage usage",
+            "line": 4,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/example_token_multiple.feature:8"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

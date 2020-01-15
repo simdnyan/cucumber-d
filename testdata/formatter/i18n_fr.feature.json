@@ -1,0 +1,551 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature",
+    "id": "i18n-support",
+    "keyword": "Fonctionnalité",
+    "name": "i18n support",
+    "description": "",
+    "line": 2,
+    "elements": [
+      {
+        "id": "i18n-support;support-des-caractères-spéciaux",
+        "keyword": "Scénario",
+        "name": "Support des caractères spéciaux",
+        "description": "",
+        "line": 4,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Soit ",
+            "name": "un exemple de scénario en français",
+            "line": 5,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:5"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Quand ",
+            "name": "j'ai 1 gâteau",
+            "line": 6,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:6"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Alors ",
+            "name": "je suis heureux",
+            "line": 7,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:7"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "i18n-support;support-du-mot-clef-\"etant-donné-que-\"",
+        "keyword": "Scénario",
+        "name": "Support du mot-clef \"Etant donné que \"",
+        "description": "",
+        "line": 9,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Etant donné que ",
+            "name": "j'aime les gâteaux",
+            "line": 10,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:10"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Lorsqu'",
+            "name": "on m'offre 1 gâteau",
+            "line": 11,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:11"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Alors ",
+            "name": "je suis heureux",
+            "line": 12,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:12"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "i18n-support;support-du-mot-clef-\"etant-donné-qu'\"",
+        "keyword": "Scénario",
+        "name": "Support du mot-clef \"Etant donné qu'\"",
+        "description": "",
+        "line": 14,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Etant donné qu'",
+            "name": "offrir un gâteau rend heureux",
+            "line": 15,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:15"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Lorsqu'",
+            "name": "on m'offre 1 gâteau",
+            "line": 16,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:16"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Alors ",
+            "name": "je suis heureux",
+            "line": 17,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:17"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "i18n-support;support-du-mot-clef-\"étant-donné-que-\"",
+        "keyword": "Scénario",
+        "name": "Support du mot-clef \"Étant donné que \"",
+        "description": "",
+        "line": 19,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Étant donné que ",
+            "name": "j'aime les gâteaux",
+            "line": 20,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:20"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Lorsqu'",
+            "name": "on m'offre 1 gâteau",
+            "line": 21,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:21"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Alors ",
+            "name": "je suis heureux",
+            "line": 22,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:22"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "i18n-support;support-du-mot-clef-\"étant-donné-qu'\"",
+        "keyword": "Scénario",
+        "name": "Support du mot-clef \"Étant donné qu'\"",
+        "description": "",
+        "line": 24,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Étant donné qu'",
+            "name": "offrir un gâteau rend heureux",
+            "line": 25,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:25"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Lorsqu'",
+            "name": "on m'offre 1 gâteau",
+            "line": 26,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:26"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Alors ",
+            "name": "je suis heureux",
+            "line": 27,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:27"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "i18n-support;support-du-mot-clef-\"et-que-\"",
+        "keyword": "Scénario",
+        "name": "Support du mot-clef \"Et que \"",
+        "description": "",
+        "line": 29,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Soit ",
+            "name": "un exemple de scénario en français",
+            "line": 30,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:30"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Lorsque ",
+            "name": "j'ai 2 gâteaux",
+            "line": 31,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:31"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Et que ",
+            "name": "quelqu'un m'offre 1 gâteau",
+            "line": 32,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:32"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Alors ",
+            "name": "j'ai 3 gâteaux",
+            "line": 33,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:33"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "i18n-support;support-du-mot-clef-\"et-qu'\"",
+        "keyword": "Scénario",
+        "name": "Support du mot-clef \"Et qu'\"",
+        "description": "",
+        "line": 35,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Soit ",
+            "name": "un exemple de scénario en français",
+            "line": 36,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:36"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Lorsque ",
+            "name": "j'ai 2 gâteaux",
+            "line": 37,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:37"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Et qu'",
+            "name": "on m'offre 1 gâteau",
+            "line": 38,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:38"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Alors ",
+            "name": "j'ai 3 gâteaux",
+            "line": 39,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:39"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "i18n-support;support-du-mot-clef-\"et-\"",
+        "keyword": "Scénario",
+        "name": "Support du mot-clef \"Et \"",
+        "description": "",
+        "line": 41,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Soit ",
+            "name": "un exemple de scénario en français",
+            "line": 42,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:42"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Quand ",
+            "name": "j'ai 2 gâteaux",
+            "line": 43,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:43"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Et ",
+            "name": "quelqu'un m'offre 1 gâteau",
+            "line": 44,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:44"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Alors ",
+            "name": "j'ai 3 gâteaux",
+            "line": 45,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:45"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "i18n-support;support-du-mot-clef-\"mais-que-\"",
+        "keyword": "Scénario",
+        "name": "Support du mot-clef \"Mais que \"",
+        "description": "",
+        "line": 47,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Soit ",
+            "name": "un exemple de scénario en français",
+            "line": 48,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:48"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Lorsque ",
+            "name": "j'ai 2 gâteaux",
+            "line": 49,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:49"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Mais que ",
+            "name": "quelqu'un me vole 1 gâteau",
+            "line": 50,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:50"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Alors ",
+            "name": "j'ai 1 gâteau",
+            "line": 51,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:51"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "i18n-support;support-du-mot-clef-\"mais-qu'\"",
+        "keyword": "Scénario",
+        "name": "Support du mot-clef \"Mais qu'\"",
+        "description": "",
+        "line": 53,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Soit ",
+            "name": "un exemple de scénario en français",
+            "line": 54,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:54"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Lorsque ",
+            "name": "j'ai 2 gâteaux",
+            "line": 55,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:55"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Mais qu'",
+            "name": "on me vole 1 gâteau",
+            "line": 56,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:56"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Alors ",
+            "name": "j'ai 1 gâteau",
+            "line": 57,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:57"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "i18n-support;support-du-mot-clef-\"mais-\"",
+        "keyword": "Scénario",
+        "name": "Support du mot-clef \"Mais \"",
+        "description": "",
+        "line": 59,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Soit ",
+            "name": "un exemple de scénario en français",
+            "line": 60,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:60"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Quand ",
+            "name": "j'ai 2 gâteaux",
+            "line": 61,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:61"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Mais ",
+            "name": "quelqu'un me vole 1 gâteau",
+            "line": 62,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:62"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Alors ",
+            "name": "j'ai 1 gâteau",
+            "line": 63,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_fr.feature:63"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

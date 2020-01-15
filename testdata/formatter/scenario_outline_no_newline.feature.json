@@ -1,0 +1,33 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/scenario_outline_no_newline.feature",
+    "id": "minimal-scenario-outline",
+    "keyword": "Feature",
+    "name": "Minimal Scenario Outline",
+    "description": "",
+    "line": 1,
+    "elements": [
+      {
+        "id": "minimal-scenario-outline;minimalistic;;2",
+        "keyword": "Scenario Outline",
+        "name": "minimalistic",
+        "description": "",
+        "line": 8,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism",
+            "line": 4,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/scenario_outline_no_newline.feature:8"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

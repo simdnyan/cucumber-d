@@ -1,0 +1,136 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/datatables.feature",
+    "id": "datatables",
+    "keyword": "Feature",
+    "name": "DataTables",
+    "description": "",
+    "line": 1,
+    "elements": [
+      {
+        "id": "datatables;minimalistic",
+        "keyword": "Scenario",
+        "name": "minimalistic",
+        "description": "",
+        "line": 3,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "a simple data table",
+            "line": 4,
+            "rows": [
+              {
+                "cells": [
+                  "foo",
+                  "bar"
+                ]
+              },
+              {
+                "cells": [
+                  "boz",
+                  "boo"
+                ]
+              }
+            ],
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/datatables.feature:4"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "a data table with a single cell",
+            "line": 7,
+            "rows": [
+              {
+                "cells": [
+                  "foo"
+                ]
+              }
+            ],
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/datatables.feature:7"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "a data table with different fromatting",
+            "line": 9,
+            "rows": [
+              {
+                "cells": [
+                  "foo",
+                  "bar",
+                  "boz"
+                ]
+              }
+            ],
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/datatables.feature:9"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "a data table with an empty cell",
+            "line": 11,
+            "rows": [
+              {
+                "cells": [
+                  "foo",
+                  "",
+                  "boz"
+                ]
+              }
+            ],
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/datatables.feature:11"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "a data table with comments and newlines inside",
+            "line": 13,
+            "rows": [
+              {
+                "cells": [
+                  "foo",
+                  "bar"
+                ]
+              },
+              {
+                "cells": [
+                  "boz",
+                  "boo"
+                ]
+              },
+              {
+                "cells": [
+                  "boz2",
+                  "boo2"
+                ]
+              }
+            ],
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/datatables.feature:13"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

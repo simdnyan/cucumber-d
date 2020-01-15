@@ -1,0 +1,100 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/example_tokens_everywhere.feature",
+    "id": "example-tokens-everywhere",
+    "keyword": "Feature",
+    "name": "Example tokens everywhere",
+    "description": "",
+    "line": 1,
+    "elements": [
+      {
+        "id": "example-tokens-everywhere;the-<one>;;2",
+        "keyword": "Scenario Outline",
+        "name": "the <one>",
+        "description": "",
+        "line": 13,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the deux:",
+            "line": 4,
+            "doc_string": {
+              "value": "trois",
+              "content_type": "",
+              "line": 5
+            },
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/example_tokens_everywhere.feature:13"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Given ",
+            "name": "the quatre:",
+            "line": 8,
+            "rows": [
+              {
+                "cells": [
+                  "cinq"
+                ]
+              }
+            ],
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/example_tokens_everywhere.feature:13"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "example-tokens-everywhere;the-<one>;;3",
+        "keyword": "Scenario Outline",
+        "name": "the <one>",
+        "description": "",
+        "line": 14,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the dos:",
+            "line": 4,
+            "doc_string": {
+              "value": "tres",
+              "content_type": "",
+              "line": 5
+            },
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/example_tokens_everywhere.feature:14"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Given ",
+            "name": "the quatro:",
+            "line": 8,
+            "rows": [
+              {
+                "cells": [
+                  "cinco"
+                ]
+              }
+            ],
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/example_tokens_everywhere.feature:14"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

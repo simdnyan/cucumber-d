@@ -1,6 +1,7 @@
 module cucumber.runner;
 
 import std.algorithm : each, filter;
+import std.array : empty;
 import std.conv : to;
 import std.datetime.stopwatch : StopWatch, AutoStart;
 import std.range : zip;
@@ -11,7 +12,7 @@ import cucumber.formatter;
 import cucumber.reflection : findMatch, MatchResult;
 import cucumber.result : FAILED, SKIPPED, UNDEFINED, PASSED, Result,
     FeatureResult, ScenarioResult, StepResult;
-import gherkin : GherkinDocument, Background, Scenario, Step;
+import gherkin : GherkinDocument, Background, Scenario, Step, Tag, Comment;
 
 /**
  * Cucumber Feature Runner
@@ -50,19 +51,32 @@ public:
         auto feature = this.document.feature.get;
         auto featureResult = FeatureResult(feature);
 
-        outputComments(feature.location.line);
+        feature.comments = outputComments(feature.location.line);
         formatter.feature(feature);
 
         foreach (scenario; feature.scenarios)
         {
+            if (scenario.steps.empty && feature.background.isNull)
+            {
+                continue;
+            }
             if (scenario.isScenarioOutline)
             {
+                if ((scenario.examples.empty || scenario.steps.empty) && feature.background.isNull)
+                {
+                    continue;
+                }
                 runScenarioOutline!ModuleNames(scenario, feature.background).each!(
                         r => featureResult += r);
             }
             else
             {
-                featureResult += runScenario!ModuleNames(scenario, feature.background);
+                auto scenarioResults = runScenario!ModuleNames(scenario, feature.background);
+                if (!feature.background.isNull)
+                {
+                    featureResult += scenarioResults[0];
+                }
+                featureResult += scenarioResults[1];
             }
         }
 
@@ -75,12 +89,19 @@ public:
     {
         ScenarioResult[] results;
 
-        outputComments(scenario.location.line);
-        formatter.scenarioOutline(scenario);
+        scenario.comments = outputComments(scenario.location.line);
+        formatter.scenario(scenario);
+        foreach (step; scenario.steps)
+        {
+            step.comments = outputComments(step.location.line);
+            formatter.step(step, StepResult(step,
+                    scenario.parent.parent.uri ~ `:` ~ step.location.line.to!string, SKIPPED));
+        }
+        formatter.emptyLine();
 
         foreach (examples; scenario.examples)
         {
-            outputComments(examples.location.line);
+            auto examplesComments = outputComments(examples.location.line);
             formatter.examples(examples);
             if (examples.tableHeader.empty)
             {
@@ -93,8 +114,6 @@ public:
 
             foreach (i, row; examples.tableBody)
             {
-                ScenarioResult result;
-
                 string[string] examplesValues = null;
                 foreach (example; zip(examples.tableHeader.cells, row.cells))
                 {
@@ -103,11 +122,14 @@ public:
 
                 auto _scenario = new Scenario(scenario.keyword,
                         scenario.getName, row.location, scenario.parent, false);
-                _scenario.tags = scenario.tags;
+                _scenario.tags = scenario.tags ~ examples.tags;
+                _scenario.comments = scenario.comments ~ examplesComments;
+                _scenario.description = scenario.description;
                 _scenario.isScenarioOutline = true;
                 foreach (step; scenario.steps)
                 {
                     auto _step = step;
+                    _step.parent = _scenario;
                     foreach (k, v; examplesValues)
                     {
                         _step.replace(`<` ~ k ~ `>`, v);
@@ -115,11 +137,16 @@ public:
                     _scenario.steps ~= _step;
                 }
 
-                result = runScenario!ModuleNames(_scenario, background);
-                result.exampleNumber = i + 1;
-                results ~= result;
-                outputComments(row.location.line);
-                formatter.tableRow(row, table, result);
+                auto result = runScenario!ModuleNames(_scenario, background);
+                result[1].exampleNumber = i + 1;
+                result[1].exampleName = examples.name;
+                if (!background.isNull)
+                {
+                    results ~= result[0];
+                }
+                results ~= result[1];
+                _scenario.comments ~= outputComments(row.location.line);
+                formatter.tableRow(row, table, result[1]);
             }
             formatter.emptyLine();
         }
@@ -128,16 +155,14 @@ public:
     }
 
     ///
-    ScenarioResult runScenario(ModuleNames...)(Scenario scenario, Nullable!Scenario background)
+    ScenarioResult[] runScenario(ModuleNames...)(Scenario scenario, Nullable!Scenario background)
     {
-        auto result = ScenarioResult(scenario,
-                this.document.uri ~ `:` ~ scenario.location.line.to!string);
+        ScenarioResult backgroundResult;
 
         if (!background.isNull)
         {
             Nullable!Scenario nullScenario;
-            runScenario!ModuleNames(background.get, nullScenario).stepResults.each!(
-                    r => result += r);
+            backgroundResult = runScenario!ModuleNames(background.get, nullScenario)[1];
             if (isFirstBackground)
             {
                 formatter.emptyLine();
@@ -145,24 +170,28 @@ public:
             this.isFirstBackground = false;
         }
 
-        outputComments(scenario.location.line);
+        scenario.comments ~= outputComments(scenario.location.line);
         if (!scenario.isBackground || this.isFirstBackground)
         {
-            formatter.scenario(scenario);
-
-            // Output failed steps in Background
             if (!scenario.isScenarioOutline)
             {
-                result.stepResults
+                formatter.scenario(scenario);
+                // Output failed steps in Background
+
+                backgroundResult.stepResults
                     .filter!(r => r.isFailed)
                     .each!(r => formatter.step(r.step, r));
             }
         }
 
+        auto result = ScenarioResult(scenario,
+                this.document.uri ~ `:` ~ scenario.location.line.to!string);
+
         foreach (step; scenario.steps)
         {
+            step.comments = outputComments(step.location.line);
             auto stepResult = StepResult(step);
-            if (result.isPassed)
+            if (result.isPassed && backgroundResult.isPassed)
             {
                 stepResult = runStep!ModuleNames(step);
             }
@@ -173,10 +202,12 @@ public:
             }
             result += stepResult;
 
-            outputComments(step.location.line);
             if (!scenario.isBackground || this.isFirstBackground)
             {
-                formatter.step(step, stepResult);
+                if (!scenario.isScenarioOutline)
+                {
+                    formatter.step(step, stepResult);
+                }
             }
         }
 
@@ -185,21 +216,24 @@ public:
             formatter.emptyLine();
         }
 
-        return result;
+        return [backgroundResult, result];
     }
 
     ///
     StepResult runStep(ModuleNames...)(Step step, bool skip = false)
     {
 
-        auto result = StepResult(step, this.document.uri ~ `:` ~ step.location.line.to!string);
+        //auto result = StepResult(step, this.document.uri ~ `:` ~ step.location.line.to!string);
+        string location = this.document.uri ~ `:` ~ (step.parent.isScenarioOutline
+                ? step.parent.location.line : step.location.line).to!string;
+        auto result = StepResult(step, location);
         auto func = findMatch!ModuleNames(step.text);
         auto sw = StopWatch(AutoStart.yes);
 
         if (func)
         {
             result.location = func.source;
-            if (skip || this.dryRun)
+            if (skip)
             {
                 result.result = SKIPPED;
             }
@@ -236,19 +270,23 @@ public:
         return result;
     }
 
-    private void outputComments(ulong currentLine)
+    private Comment[] outputComments(ulong currentLine)
     {
+        Comment[] comments;
+
         if (lineNumber > currentLine)
         {
-            return;
+            return comments;
         }
         foreach (comment; this.document.comments)
         {
             if (comment.location.line > lineNumber && comment.location.line < currentLine)
             {
                 formatter.comment(comment);
+                comments ~= comment;
             }
         }
         lineNumber = currentLine;
+        return comments;
     }
 }

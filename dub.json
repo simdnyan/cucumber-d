@@ -6,6 +6,7 @@
 	"copyright": "Copyright © 2014, Me. All rights reserved.",
 	"homepage": "https://github.com/simdnyan/cucumber-d",
 	"dependencies": {
+		"asdf": "~>0.5.3",
 		":gherkin-d": "*"
 	},
 	"description": "Cucumber for D.",
@@ -13,5 +14,19 @@
 	"name": "cucumber-d",
 	"subPackages": [
 		"gherkin-d"
+	],
+	"targetType": "library",
+	"configurations": [
+		{
+			"name": "default",
+			"targetType": "executable",
+		},
+		{
+			"name": "unittest",
+			"targetType": "executable",
+			"dependencies": {
+				"unit-threaded:assertions": "~>0.10.4"
+			}
+		}
 	]
 }

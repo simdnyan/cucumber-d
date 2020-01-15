@@ -1,0 +1,192 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/descriptions.feature",
+    "id": "descriptions-everywhere",
+    "keyword": "Feature",
+    "name": "Descriptions everywhere",
+    "description": "  This is a single line description",
+    "line": 1,
+    "elements": [
+      {
+        "id": "descriptions-everywhere;two-lines",
+        "keyword": "Scenario",
+        "name": "two lines",
+        "description": "  This description\n  has two lines and indented with two spaces",
+        "line": 4,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism",
+            "line": 7,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/descriptions.feature:7"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "descriptions-everywhere;without-indentation",
+        "keyword": "Scenario",
+        "name": "without indentation",
+        "description": "This is a description without indentation",
+        "line": 9,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism",
+            "line": 11,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/descriptions.feature:11"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "descriptions-everywhere;empty-lines-in-the-middle",
+        "keyword": "Scenario",
+        "name": "empty lines in the middle",
+        "description": "  This description\n\n  has an empty line in the middle",
+        "line": 13,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism",
+            "line": 17,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/descriptions.feature:17"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "descriptions-everywhere;empty-lines-around",
+        "keyword": "Scenario",
+        "name": "empty lines around",
+        "description": "  This description\n  has an empty lines around",
+        "line": 19,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism",
+            "line": 24,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/descriptions.feature:24"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "descriptions-everywhere;comment-after-description",
+        "keyword": "Scenario",
+        "name": "comment after description",
+        "description": "  This description\n  has a comment after",
+        "line": 26,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism",
+            "line": 31,
+            "comments": [
+              {
+                "value": "# this is a comment",
+                "line": 30
+              }
+            ],
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/descriptions.feature:31"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "descriptions-everywhere;comment-right-after-description",
+        "keyword": "Scenario",
+        "name": "comment right after description",
+        "description": "  This description\n  has a comment right after",
+        "line": 33,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism",
+            "line": 38,
+            "comments": [
+              {
+                "value": "#  this is another comment",
+                "line": 36
+              }
+            ],
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/descriptions.feature:38"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "descriptions-everywhere;description-with-escaped-docstring-separator",
+        "keyword": "Scenario",
+        "name": "description with escaped docstring separator",
+        "description": "  This description has an \\\"\\\"\\\" (escaped docstring sparator)",
+        "line": 40,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism",
+            "line": 43,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/descriptions.feature:43"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "descriptions-everywhere;scenario-outline-with-a-description;examples-with-description;2",
+        "keyword": "Scenario Outline",
+        "name": "scenario outline with a description",
+        "description": "This is a scenario outline description",
+        "line": 52,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism",
+            "line": 47,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/descriptions.feature:52"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

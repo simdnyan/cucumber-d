@@ -1,0 +1,33 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/language.feature",
+    "id": "explicit-language-specification",
+    "keyword": "Feature",
+    "name": "Explicit language specification",
+    "description": "",
+    "line": 3,
+    "elements": [
+      {
+        "id": "explicit-language-specification;minimalistic",
+        "keyword": "Scenario",
+        "name": "minimalistic",
+        "description": "",
+        "line": 5,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism",
+            "line": 6,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/language.feature:6"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

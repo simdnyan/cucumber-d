@@ -1,0 +1,32 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/incomplete_scenario.feature",
+    "id": "incomplete-scenarios",
+    "keyword": "Feature",
+    "name": "Incomplete scenarios",
+    "description": "",
+    "line": 1,
+    "elements": [
+      {
+        "keyword": "Background",
+        "name": "Adding a background won't make a pickle",
+        "description": "",
+        "line": 3,
+        "type": "background",
+        "steps": [
+          {
+            "keyword": "* ",
+            "name": "a step",
+            "line": 4,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/incomplete_scenario.feature:4"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

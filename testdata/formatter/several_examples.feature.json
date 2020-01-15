@@ -1,0 +1,66 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/several_examples.feature",
+    "id": "tagged-examples",
+    "keyword": "Feature",
+    "name": "Tagged Examples",
+    "description": "",
+    "line": 1,
+    "elements": [
+      {
+        "id": "tagged-examples;minimalistic;;2",
+        "keyword": "Scenario Outline",
+        "name": "minimalistic",
+        "description": "",
+        "line": 9,
+        "type": "scenario",
+        "tags": [
+          {
+            "name": "@foo",
+            "line": 6
+          }
+        ],
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the foo",
+            "line": 4,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/several_examples.feature:9"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "tagged-examples;minimalistic;;2",
+        "keyword": "Scenario Outline",
+        "name": "minimalistic",
+        "description": "",
+        "line": 14,
+        "type": "scenario",
+        "tags": [
+          {
+            "name": "@bar",
+            "line": 11
+          }
+        ],
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the bar",
+            "line": 4,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/several_examples.feature:14"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

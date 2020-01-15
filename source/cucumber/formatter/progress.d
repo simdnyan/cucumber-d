@@ -41,12 +41,6 @@ class Progress : Formatter
     }
 
     ///
-    override void scenarioOutline(ref Scenario scenario)
-    {
-        // do nothing
-    }
-
-    ///
     override void examples(Examples examples)
     {
         // do nothing

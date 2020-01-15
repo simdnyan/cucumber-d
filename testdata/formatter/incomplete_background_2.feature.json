@@ -1,0 +1,40 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/incomplete_background_2.feature",
+    "id": "incomplete-backgrounds,-part-2",
+    "keyword": "Feature",
+    "name": "Incomplete backgrounds, Part 2",
+    "description": "",
+    "line": 1,
+    "elements": [
+      {
+        "keyword": "Background",
+        "name": "just a description",
+        "description": "    A short description",
+        "line": 3,
+        "type": "background"
+      },
+      {
+        "id": "incomplete-backgrounds,-part-2;still-pickles-up",
+        "keyword": "Scenario",
+        "name": "still pickles up",
+        "description": "",
+        "line": 6,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "* ",
+            "name": "a step",
+            "line": 7,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/incomplete_background_2.feature:7"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

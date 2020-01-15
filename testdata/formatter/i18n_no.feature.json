@@ -1,0 +1,55 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/i18n_no.feature",
+    "id": "i18n-support",
+    "keyword": "Egenskap",
+    "name": "i18n support",
+    "description": "",
+    "line": 2,
+    "elements": [
+      {
+        "id": "i18n-support;parsing-many-languages",
+        "keyword": "Scenario",
+        "name": "Parsing many languages",
+        "description": "",
+        "line": 4,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Gitt ",
+            "name": "Gherkin supports many languages",
+            "line": 5,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_no.feature:5"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Når ",
+            "name": "Norwegian keywords are parsed",
+            "line": 6,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_no.feature:6"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Så ",
+            "name": "they should be recognized",
+            "line": 7,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_no.feature:7"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

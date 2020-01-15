@@ -1,0 +1,72 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/escaped_pipes.feature",
+    "id": "escaped-pipes",
+    "keyword": "Feature",
+    "name": "Escaped pipes",
+    "description": "    The \\-character will be considered as an escape in table cell\n    iff it is followed by a |-character, a \\-character or an n.",
+    "line": 1,
+    "elements": [
+      {
+        "id": "escaped-pipes;they-are-the-future",
+        "keyword": "Scenario",
+        "name": "They are the future",
+        "description": "",
+        "line": 5,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "they have arrived",
+            "line": 6,
+            "rows": [
+              {
+                "cells": [
+                  "æ",
+                  "o"
+                ]
+              },
+              {
+                "cells": [
+                  "a",
+                  "ø"
+                ]
+              }
+            ],
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/escaped_pipes.feature:6"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Given ",
+            "name": "they have arrived",
+            "line": 9,
+            "rows": [
+              {
+                "cells": [
+                  "|æ\\n",
+                  "\\o\no\\"
+                ]
+              },
+              {
+                "cells": [
+                  "\\|a\\\\n",
+                  "ø\\\nø\\"
+                ]
+              }
+            ],
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/escaped_pipes.feature:9"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

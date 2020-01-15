@@ -4,6 +4,7 @@ import std.array : replace;
 import std.typecons : Nullable;
 
 import asdf : serializationIgnoreOutIf, serializationIgnoreOut;
+import gherkin.comment : Comment;
 import gherkin.datatable : DataTable;
 import gherkin.docstring : DocString;
 import gherkin.location : Location;
@@ -26,6 +27,8 @@ struct Step
     @serializationIgnoreOutIf!`a.isNull` Nullable!DocString docString;
     ///
     @serializationIgnoreOutIf!`a.empty` DataTable dataTable;
+    ///
+    @serializationIgnoreOut Comment[] comments;
 
     ///
     void replace(string from, string to)

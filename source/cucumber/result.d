@@ -1,9 +1,16 @@
 module cucumber.result;
 
 import core.time : Duration;
-import std.string : format;
+import std.algorithm : map;
+import std.algorithm.iteration : filter;
+import std.array : array, empty;
+import std.conv : to;
+import std.json : JSONValue, parseJSON;
+import std.string : format, strip, toLower, tr;
 import std.typecons : Nullable;
 
+import asdf : serializationIgnoreOut, serializationIgnoreOutIf,
+    serializationKeyOut, serializationTransformOut;
 import gherkin : Feature, Scenario, Step;
 
 ///
@@ -36,6 +43,67 @@ mixin template isResult()
     mixin isResult!"skipped";
     mixin isResult!"undefined";
     mixin isResult!"passed";
+}
+
+///
+mixin template property(string parent, string type, string key)
+{
+    mixin("@property %s %s() const { return %s.%s; }".format(type, key, parent, key));
+}
+
+///
+mixin template property(string parent, string type, string key, string field)
+{
+    mixin("@property %s %s() const { return %s.%s; }".format(type, key, parent, field));
+}
+
+///
+mixin template nullableProperty(string parent, string type, string key)
+{
+    mixin("@property %s %s() const { return %s.%s.isNull ? `` :  %s.%s.get; }".format(type,
+            key, parent, key, parent, key));
+}
+
+///
+string createId(Nullable!string name)
+{
+    return name.isNull ? `` : name.get.toLower.tr(` `, `-`);
+}
+
+///
+struct Comment
+{
+    ///
+    string value;
+    ///
+    ulong line;
+}
+
+///
+struct Tag
+{
+    ///
+    string name;
+    ///
+    ulong line;
+}
+
+///
+struct Row
+{
+    ///
+    string[] cells;
+}
+
+///
+struct DocString
+{
+    ///
+    string value;
+    ///
+    @serializationKeyOut("content_type") string contentType;
+    ///
+    ulong line;
 }
 
 ///
@@ -91,8 +159,6 @@ struct ResultSummary
 struct RunResult
 {
     ///
-    int exitCode = 0;
-    ///
     Duration time;
     ///
     ResultSummary[string] resultSummaries;
@@ -104,12 +170,12 @@ struct RunResult
     {
         if (operator == "+")
         {
+            if (val.scenarioResults.empty)
+            {
+                return this;
+            }
             this.featureResults ~= val;
             this.time += val.time;
-            if (!val.isPassed)
-            {
-                exitCode = 1;
-            }
             if (!("scenarios" in resultSummaries))
                 resultSummaries["scenarios"] = ResultSummary();
             if (!("steps" in resultSummaries))
@@ -130,15 +196,15 @@ struct RunResult
 struct FeatureResult
 {
     ///
-    Feature feature;
+    @serializationIgnoreOut Feature feature;
     ///
-    Result result = Result.PASSED;
+    @serializationIgnoreOut Result result = Result.PASSED;
     ///
-    ScenarioResult[] scenarioResults;
+    @serializationIgnoreOut ScenarioResult[] scenarioResults;
     ///
-    Duration time;
+    @serializationIgnoreOut Duration time;
     ///
-    ResultSummary resultSummary;
+    @serializationIgnoreOut ResultSummary resultSummary;
 
     mixin isResult;
 
@@ -153,10 +219,44 @@ struct FeatureResult
             {
                 this.result = Result.FAILED;
             }
-            this.resultSummary += ResultSummary(val.result);
+            if (!val.scenario.isBackground)
+            {
+                this.resultSummary += ResultSummary(val.result);
+            }
             return this;
         }
         assert(0);
+    }
+
+    mixin property!("feature.parent", "string", "uri");
+
+    ///
+    @property string id()
+    {
+        return createId(feature.name);
+    }
+
+    mixin property!("feature", "string", "keyword");
+    mixin nullableProperty!("feature", "string", "name");
+    mixin nullableProperty!("feature", "string", "description");
+    mixin property!("feature.location", "ulong", "line");
+
+    ///
+    @property @serializationIgnoreOutIf!`a.empty` Tag[] tags()
+    {
+        return feature.tags.map!(t => Tag(t.name, t.location.line)).array;
+    }
+
+    ///
+    @property @serializationIgnoreOutIf!`a.empty` Comment[] comments()
+    {
+        return feature.comments.map!(c => Comment(c.text.strip, c.location.line)).array;
+    }
+
+    ///
+    @property @serializationIgnoreOutIf!`a.empty` ScenarioResult[] elements()
+    {
+        return scenarioResults.filter!(r => !r.stepResults.empty || r.scenario.isBackground).array;
     }
 }
 
@@ -164,19 +264,21 @@ struct FeatureResult
 struct ScenarioResult
 {
     ///
-    Scenario scenario;
+    @serializationIgnoreOut Scenario scenario;
     ///
-    string location;
+    @serializationIgnoreOut string location;
     ///
-    Result result = Result.PASSED;
+    @serializationIgnoreOut Result result = Result.PASSED;
     ///
-    StepResult[] stepResults;
+    @serializationIgnoreOut StepResult[] stepResults;
     ///
-    Duration time;
+    @serializationIgnoreOut Duration time;
     ///
-    ResultSummary resultSummary;
+    @serializationIgnoreOut ResultSummary resultSummary;
     ///
-    Nullable!ulong exampleNumber;
+    @serializationIgnoreOut string exampleName;
+    ///
+    @serializationIgnoreOut ulong exampleNumber;
 
     mixin isResult;
 
@@ -196,21 +298,144 @@ struct ScenarioResult
         }
         assert(0);
     }
+
+    ///
+    @property @serializationTransformOut!`a.get`@serializationIgnoreOutIf!`a.isNull` Nullable!string id()
+    {
+        if (scenario.isBackground)
+        {
+            return Nullable!string();
+        }
+        auto id = createId(scenario.parent.name) ~ `;` ~ createId(scenario.name);
+        if (!scenario.isScenarioOutline)
+        {
+            return Nullable!string(id);
+        }
+        id ~= `;` ~ createId(cast(Nullable!string) exampleName);
+        id ~= `;` ~ (exampleNumber == 0 ? 0 : exampleNumber + 1).to!string;
+        return Nullable!string(id);
+    }
+
+    mixin property!("scenario", "string", "keyword");
+    mixin nullableProperty!("scenario", "string", "name");
+    mixin nullableProperty!("scenario", "string", "description");
+    mixin property!("scenario.location", "ulong", "line");
+
+    ///
+    @property string type()
+    {
+        return scenario.isBackground ? "background" : "scenario";
+    }
+
+    ///
+    @property @serializationIgnoreOutIf!`a.empty` Comment[] comments()
+    {
+        return scenario.comments.map!(c => Comment(c.text.strip, c.location.line)).array;
+    }
+
+    ///
+    @property @serializationIgnoreOutIf!`a.empty` Tag[] tags()
+    {
+        if (scenario.isBackground)
+        {
+            return [];
+        }
+        return scenario.parent.tags.map!(t => Tag(t.name, t.location.line))
+            .array ~ scenario.tags.map!(t => Tag(t.name, t.location.line)).array;
+    }
+
+    ///
+    @property @serializationIgnoreOutIf!`a.empty` StepResult[] steps()
+    {
+        return stepResults;
+    }
 }
 
 ///
 struct StepResult
 {
     ///
-    Step step;
+    @serializationIgnoreOut Step step;
     ///
-    string location;
+    @serializationIgnoreOut string location;
     ///
-    Result result = Result.PASSED;
+    @serializationIgnoreOut Result result = Result.PASSED;
     ///
-    Duration time;
+    @serializationIgnoreOut Duration time;
     ///
-    Nullable!Exception exception;
+    @serializationIgnoreOut Nullable!Exception exception;
 
     mixin isResult;
+
+    mixin property!("step", "string", "keyword");
+    mixin property!("step", "string", "name", "text");
+    mixin property!("step.location", "ulong", "line");
+
+    ///
+    @property @serializationIgnoreOutIf!`a.empty` Row[] rows()
+    {
+        return step.dataTable.rows.map!(r => Row(r.cells.map!(c => c.value.empty
+                ? `` : c.value).array)).array;
+    }
+
+    ///
+    @property @serializationIgnoreOutIf!`a.value.empty`@serializationKeyOut("doc_string")
+    DocString docString()
+    {
+        if (step.docString.isNull)
+        {
+            return DocString();
+        }
+        with (step.docString.get)
+        {
+            return DocString(content, contentType, location.line);
+        }
+    }
+
+    ///
+    @property @serializationIgnoreOutIf!`a.empty` Comment[] comments()
+    {
+        return step.comments.map!(c => Comment(c.text.strip, c.location.line)).array;
+    }
+
+    ///
+    @property Match match()
+    {
+        return Match(location);
+    }
+
+    ///
+    @property @serializationKeyOut("result")
+    ResultStatus resultStatus()
+    {
+        auto result = ResultStatus(result);
+
+        if (this.isPassed || this.isFailed)
+        {
+            result.duration = time.total!"nsecs";
+        }
+        if (this.isFailed)
+        {
+            result.error_message = exception.get.message.to!string;
+        }
+        return result;
+    }
+
+    ///
+    struct Match
+    {
+        ///
+        string location;
+    }
+
+    ///
+    struct ResultStatus
+    {
+        ///
+        @serializationTransformOut!`a.toLower` Result status;
+        ///
+        @serializationIgnoreOutIf!`a.isNull`@serializationTransformOut!`a.get` Nullable!ulong duration;
+        ///
+        @serializationIgnoreOutIf!`a.isNull`@serializationTransformOut!`a.get` Nullable!string error_message;
+    }
 }

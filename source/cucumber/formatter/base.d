@@ -18,9 +18,6 @@ interface Formatter
     void scenario(ref Scenario);
 
     ///
-    void scenarioOutline(ref Scenario);
-
-    ///
     void examples(Examples);
 
     ///

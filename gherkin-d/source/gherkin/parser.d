@@ -18,6 +18,7 @@ enum Token
     Language,
     Feature,
     Scenario,
+    ScenarioOutline,
     Background,
     Step,
     Examples,
@@ -59,7 +60,7 @@ class Parser
             immutable Token[string] tokenStrings = [
                 "#language:" : Token.Language, "Feature:" : Token.Feature,
                 "Scenario:" : Token.Scenario, "Example:" : Token.Scenario,
-                "Scenario Outline:" : Token.Scenario,
+                "Scenario Outline:" : Token.ScenarioOutline,
                 "Background:" : Token.Background, "Given " : Token.Step,
                 "When " : Token.Step, "Then " : Token.Step, "And " : Token.Step,
                 "But " : Token.Step, "* " : Token.Step, "@" : Token.Tag,
@@ -339,11 +340,12 @@ class Parser
             return finalize;
         }
 
-        Scenario parseScenario(LineToken token, Feature feature)
+        Scenario parseScenario(LineToken token, Feature feature, bool isScenarioOutline = false)
         {
             auto line = documentStrings[lineNumber];
             auto scenario = new Scenario(token.keyword[0 .. $ - 1], token.text.stripLeft,
                     token.location, feature, token.token == Token.Background);
+            scenario.isScenarioOutline = isScenarioOutline;
             if (!tags.empty)
             {
                 scenario.tags = tags;
@@ -416,6 +418,9 @@ class Parser
                     break;
                 case Token.Scenario:
                     feature.scenarios ~= parseScenario(lineToken, feature);
+                    break;
+                case Token.ScenarioOutline:
+                    feature.scenarios ~= parseScenario(lineToken, feature, true);
                     break;
                 case Token.Other:
                     feature.description = parseDescription();

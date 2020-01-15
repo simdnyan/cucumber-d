@@ -1,0 +1,33 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/minimal.feature",
+    "id": "minimal",
+    "keyword": "Feature",
+    "name": "Minimal",
+    "description": "",
+    "line": 1,
+    "elements": [
+      {
+        "id": "minimal;minimalistic",
+        "keyword": "Scenario",
+        "name": "minimalistic",
+        "description": "",
+        "line": 3,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism",
+            "line": 4,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/minimal.feature:4"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

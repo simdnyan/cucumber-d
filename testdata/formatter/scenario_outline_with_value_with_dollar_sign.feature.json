@@ -1,0 +1,33 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/scenario_outline_with_value_with_dollar_sign.feature",
+    "id": "scenario-outline-with-a-value-with-a-dollar-sign-($)",
+    "keyword": "Feature",
+    "name": "Scenario Outline with a value with a dollar sign ($)",
+    "description": "",
+    "line": 1,
+    "elements": [
+      {
+        "id": "scenario-outline-with-a-value-with-a-dollar-sign-($);minimalistic;;2",
+        "keyword": "Scenario Outline",
+        "name": "minimalistic",
+        "description": "",
+        "line": 8,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the pa$$word",
+            "line": 4,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/scenario_outline_with_value_with_dollar_sign.feature:8"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
