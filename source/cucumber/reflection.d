@@ -7,75 +7,100 @@ import std.typetuple;
 import std.regex;
 import std.conv;
 
-
-private template isMatchStruct(alias T) {
-    static if(__traits(compiles, typeof(T))) {
-        enum isMatchStruct = is(typeof(T): Match);
-    } else {
+private template isMatchStruct(alias T)
+{
+    static if (__traits(compiles, typeof(T)))
+    {
+        enum isMatchStruct = is(typeof(T) : Match);
+    }
+    else
+    {
         enum isMatchStruct = false;
     }
 }
 
-unittest {
-    Match match;
+unittest
+{
+    const Match match;
     static assert(isMatchStruct!match);
 }
 
-
-private template hasMatchUDA(alias T) {
+private template hasMatchUDA(alias T)
+{
     alias attrs = Filter!(isMatchStruct, __traits(getAttributes, T));
     static assert(attrs.length < 2, "Only one Match UDA per function");
     enum hasMatchUDA = attrs.length == 1;
 }
 
-private auto getRegex(alias T)() {
+private auto getRegex(alias T)()
+{
     static assert(hasMatchUDA!T, "Can only get regexp from Match structure");
     return Filter!(isMatchStruct, __traits(getAttributes, T))[0].reg;
 }
 
-unittest {
+unittest
+{
     @Match(`^foo reg`)
-    void foo() {
+    void foo()
+    {
         static assert(hasMatchUDA!foo);
         static assert(getRegex!foo == `^foo reg`);
     }
 }
 
-auto getLineNumber(alias T)() {
+auto getLineNumber(alias T)()
+{
     static assert(hasMatchUDA!T, "Can only get line number from Match structure");
     return Filter!(isMatchStruct, __traits(getAttributes, T))[0].line;
 }
 
-unittest {
-    @Match("foo", 4) void foo() {}
+unittest
+{
+    @Match("foo", 4) void foo()
+    {
+    }
+
     static assert(getLineNumber!foo == 4);
 
-    @Match("bar", 3) void bar() {}
+    @Match("bar", 3) void bar()
+    {
+    }
+
     static assert(getLineNumber!bar == 3);
 }
 
 alias CucumberStepFunction = void function(in string[] = []);
 
-struct CucumberStep {
-    this(in CucumberStepFunction func, in string reg, int id, in string source) {
+///
+struct CucumberStep
+{
+    ///
+    this(in CucumberStepFunction func, in string reg, int id, in string source)
+    {
         this(func, std.regex.regex(reg), id, source);
         this.regexString = reg;
     }
 
-    this(in CucumberStepFunction func, Regex!char reg, int id, in string source) {
+    ///
+    this(in CucumberStepFunction func, Regex!char reg, int id, in string source)
+    {
         this.func = func;
         this.regex = reg;
         this.id = id;
         this.source = source;
     }
 
+    ///
     CucumberStepFunction func;
+    ///
     Regex!char regex;
+    ///
     string regexString;
-    int id; //automatically generated id
+    /// automatically generated id
+    int id;
+    ///
     string source;
 }
-
 
 /**
  * Finds all steps in all modules. Modules are passed in as strings.
@@ -83,29 +108,34 @@ struct CucumberStep {
  * all functions with the Match UDA attached to it and extracting
  * the relevant regex from the Match UDA itself.
  */
-auto findSteps(ModuleNames...)() if(allSatisfy!(isSomeString, (typeof(ModuleNames)))) {
+auto findSteps(ModuleNames...)()
+        if (allSatisfy!(isSomeString, (typeof(ModuleNames))))
+{
     mixin(importModulesString!ModuleNames);
     CucumberStep[] cucumberSteps;
     int id;
-    foreach(mod; ModuleNames) {
-        foreach(member; __traits(allMembers, mixin(mod))) {
+    foreach (mod; ModuleNames)
+    {
+        foreach (member; __traits(allMembers, mixin(mod)))
+        {
 
             enum compiles = __traits(compiles, mixin(member));
 
-            static if(compiles) {
+            static if (compiles)
+            {
 
                 enum isFunction = isSomeFunction!(mixin(member));
                 enum hasMatch = hasMatchUDA!(mixin(member));
 
-                static if(isFunction && hasMatch) {
+                static if (isFunction && hasMatch)
+                {
                     enum reg = rawStringMixin(getRegex!(mixin(member)));
 
                     enum funcArity = arity!(mixin(member));
                     enum numCaptures = countParenPairs!reg;
-                    static assert(funcArity == numCaptures,
-                                  text("Arity of ", member, " (", funcArity, ")",
-                                       " does not match the number of capturing parens (",
-                                       numCaptures, ") in ", getRegex!(mixin(member))));
+                    static assert(funcArity == numCaptures, text("Arity of ", member, " (", funcArity, ")",
+                            " does not match the number of capturing parens (",
+                            numCaptures, ") in ", getRegex!(mixin(member))));
 
                     //e.g. funcCall would be "myfunc(captures[0], captures[1]);"
                     enum funcCall = member ~ argsStringWithParens!(reg, mixin(member)) ~ ";";
@@ -114,12 +144,13 @@ auto findSteps(ModuleNames...)() if(allSatisfy!(isSomeString, (typeof(ModuleName
                     enum lambda = "(captures) { " ~ funcCall ~ " }";
 
                     //e.g. mymod.myfunc:13
-                    enum source = `"` ~ mod ~ "." ~ member ~ `:` ~ getLineNumber!(mixin(member)).to!string ~ `"`;
+                    enum source = `"` ~ mod ~ "." ~ member ~ `:` ~ getLineNumber!(mixin(member))
+                            .to!string ~ `"`;
 
                     //e.g. cucumberSteps ~= CucumberStep((in string[] cs) { myfunc(); }, r"foobar",
                     //                                   ++id, "foo.bar:3");
-                    enum mixinStr = `cucumberSteps ~= CucumberStep(` ~ lambda ~ `, ` ~ reg ~
-                                                                   `, ++id, ` ~ source ~ `);`;
+                    enum mixinStr = `cucumberSteps ~= CucumberStep(` ~ lambda
+                        ~ `, ` ~ reg ~ `, ++id, ` ~ source ~ `);`;
 
                     mixin(mixinStr);
                 }
@@ -135,13 +166,22 @@ auto findSteps(ModuleNames...)() if(allSatisfy!(isSomeString, (typeof(ModuleName
  * But for the wire protocol I need access to the captures
  * array so it's a struct.
  */
-struct MatchResult {
+struct MatchResult
+{
+    ///
     CucumberStepFunction func;
-    const (string)[] captures;
+    ///
+    const(string)[] captures;
+    ///
     int id;
+    ///
     string regex;
+    ///
     string source;
-    this(in CucumberStepFunction func, in string[] captures, in int id, in string regex, in string source) {
+    ///
+    this(in CucumberStepFunction func, in string[] captures, in int id,
+            in string regex, in string source)
+    {
         this.func = func;
         this.captures = captures;
         this.id = id;
@@ -149,45 +189,56 @@ struct MatchResult {
         this.source = source;
     }
 
-    void opCall() const {
-        if(func is null) throw new Exception("MatchResult with null function");
+    ///
+    void opCall() const
+    {
+        if (func is null)
+            throw new Exception("MatchResult with null function");
         func(captures);
     }
 
-    bool opCast(T: bool)() {
+    ///
+    bool opCast(T : bool)() const
+    {
         return func !is null;
     }
 }
-
 
 /**
  * Finds the match to a step string. Checks all steps and loops
  * over to see which one has a matching regex. Steps are found
  * at compile-time.
  */
-MatchResult findMatch(ModuleNames...)(string step_str) {
+MatchResult findMatch(ModuleNames...)(string step_str)
+{
     step_str = stripCucumberKeywords(step_str);
     enum steps = findSteps!ModuleNames;
-    foreach(step; steps) {
+    foreach (step; steps)
+    {
         auto m = step_str.match(step.regex);
-        if(m) {
-            import std.array;
-            return MatchResult(step.func, m.captures.array, step.id, step.regexString, step.source);
+        if (m)
+        {
+            import std.array : array;
+
+            return MatchResult(step.func, m.captures.array, step.id,
+                    step.regexString, step.source);
         }
     }
 
     return MatchResult();
 }
 
-
 /**
  * Counts the number of parentheses pairs in a string known
  * at compile-time
  */
-int countParenPairs(string reg)() {
-    int intCount(in string haystack, in string needle) {
-        import std.algorithm: count;
-        return cast(int)haystack.count(needle);
+int countParenPairs(string reg)()
+{
+    int intCount(in string haystack, in string needle)
+    {
+        import std.algorithm : count;
+
+        return cast(int) haystack.count(needle);
     }
 
     //no need to count matching closing parens since it won't be a valid
@@ -195,7 +246,8 @@ int countParenPairs(string reg)() {
     return intCount(reg, "(") - intCount(reg, r"\(") - intCount(reg, r"(?:");
 }
 
-unittest {
+unittest
+{
     static assert(countParenPairs!r"" == 0);
     static assert(countParenPairs!r"foo" == 0);
     static assert(countParenPairs!r"\(\)" == 0);
@@ -211,19 +263,25 @@ unittest {
  * Returns an array of string mixins to convert each type
  * from a string
  */
-auto conversionsFromString(Types...)() {
+auto conversionsFromString(Types...)()
+{
     string[] convs;
-    foreach(T; Types) {
-        static if(isSomeString!T) {
+    foreach (T; Types)
+    {
+        static if (isSomeString!T)
+        {
             convs ~= "";
-        } else {
+        }
+        else
+        {
             convs ~= ".to!" ~ Unqual!T.stringof;
         }
     }
     return convs;
 }
 
-unittest {
+unittest
+{
     static assert(conversionsFromString!(int, string) == [".to!int", ""]);
     static assert(conversionsFromString!(string, double) == ["", ".to!double"]);
 }
@@ -233,40 +291,62 @@ unittest {
  * associated with regexen. Meant to be used with mixin to
  * generate code.
  */
-string argsString(string reg, alias func)() {
+string argsString(string reg, alias func)()
+{
     enum convs = conversionsFromString!(ParameterTypeTuple!func);
     enum numCaptures = countParenPairs!reg;
-    static assert(convs.length == numCaptures,
-                  text("Wrong length for ", convs, ", should be ", numCaptures));
+    static assert(convs.length == numCaptures, text("Wrong length for ", convs,
+            ", should be ", numCaptures));
 
     string[] args;
-    foreach(i; 0 .. numCaptures) {
+    foreach (i; 0 .. numCaptures)
+    {
         args ~= "captures[" ~ (i + 1).to!string ~ "]" ~ convs[i];
     }
 
-    import std.array;
+    import std.array : join;
+
     return args.join(", ");
 }
 
-string argsStringWithParens(string reg, alias func)() {
+///
+string argsStringWithParens(string reg, alias func)()
+{
     return "(" ~ argsString!(reg, func) ~ ")";
 }
 
-unittest {
-    void func() {}
+unittest
+{
+    void func()
+    {
+    }
+
     static assert(argsString!(r"", func) == "");
 
-    void func_is(int, string) {}
+    void func_is(int, string)
+    {
+    }
+
     static assert(argsString!(r"(foo)...(bar)", func_is) == "captures[1].to!int, captures[2]");
 
-    void func_cis(in int, in string) {}
+    void func_cis(in int, in string)
+    {
+    }
+
     static assert(argsString!(r"(foo)...(bar)", func_cis) == "captures[1].to!int, captures[2]");
 
-    void func_si(string, int) {}
+    void func_si(string, int)
+    {
+    }
+
     static assert(argsString!(r"(foo)...(bar)", func_si) == "captures[1], captures[2].to!int");
 
-    void func_dd(double, double) {}
-    static assert(argsString!(r"(foo)...(bar)", func_dd) == "captures[1].to!double, captures[2].to!double");
+    void func_dd(double, double)
+    {
+    }
+
+    static assert(argsString!(r"(foo)...(bar)",
+            func_dd) == "captures[1].to!double, captures[2].to!double");
 }
 
 /**
@@ -281,13 +361,16 @@ unittest {
  * quote character in it. So this function returns an escaped
  * version that can be safely used.
  */
-string rawStringMixin(in string str) {
-    import std.array;
+string rawStringMixin(in string str)
+{
+    import std.array : replace;
+
     return "r\"" ~ str.replace(`"`, "\" ~ `\"` ~ r\"") ~ "\"";
 }
 
-unittest {
-    static assert(rawStringMixin(`Sharks with "lasers" yo.`) ==
-                  "r\"Sharks with \" ~ `\"` ~ r\"lasers\" ~ `\"` ~ r\" yo.\"");
+unittest
+{
+    static assert(rawStringMixin(
+            `Sharks with "lasers" yo.`) == "r\"Sharks with \" ~ `\"` ~ r\"lasers\" ~ `\"` ~ r\" yo.\"");
     static assert(rawStringMixin(`foo bar baz`) == "r\"foo bar baz\"");
 }

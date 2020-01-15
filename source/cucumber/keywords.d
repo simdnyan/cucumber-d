@@ -2,10 +2,16 @@ module cucumber.keywords;
 
 import std.string;
 
-struct Match {
+///
+struct Match
+{
+    ///
     string reg;
+    ///
     ulong line;
-    this(in string reg, in ulong line = __LINE__) {
+    ///
+    this(in string reg, in ulong line = __LINE__)
+    {
         this.reg = reg;
         this.line = line;
     }
@@ -17,18 +23,26 @@ alias Then = Match;
 alias And = Match;
 alias But = Match;
 
-string stripCucumberKeywords(string str) {
-    string stripImpl(string str, in string keyword) {
-        import std.array;
+///
+string stripCucumberKeywords(string str)
+{
+    string stripImpl(string str, in string keyword)
+    {
+        static import std.array;
+
         str = str.stripLeft;
-        if(str.startsWith(keyword)) {
+        if (str.startsWith(keyword))
+        {
             return std.array.replace(str, keyword, "");
-        } else {
+        }
+        else
+        {
             return str;
         }
     }
 
-    foreach(keyword; ["Given", "When", "Then", "And", "But"]) {
+    foreach (keyword; ["Given", "When", "Then", "And", "But"])
+    {
         str = stripImpl(str, keyword);
     }
 
