@@ -82,11 +82,40 @@ struct Examples
     ///
     Location location;
     ///
-    @serializationIgnoreOutIf!`a.isNull`@serializationTransformOut!`a.get` Nullable!TableRow tableHeader;
+    @serializationIgnoreOutIf!`a.empty` TableRow tableHeader;
     ///
     @serializationIgnoreOutIf!`a.empty` TableRow[] tableBody;
     ///
     @serializationIgnoreOutIf!`a.isNull`@serializationTransformOut!`a.get` Nullable!string description;
     ///
     @serializationIgnoreOutIf!`a.empty` Tag[] tags;
+
+    ///
+    this(ref return scope Examples rhs)
+    {
+        this.keyword = rhs.keyword;
+        this.name = rhs.name;
+        this.location = rhs.location;
+        this.tableHeader = rhs.tableHeader;
+        this.tableBody = rhs.tableBody.dup;
+        this.description = rhs.description;
+        this.tags = rhs.tags.dup;
+    }
+    ///
+    this(string keyword, string name, Location location, TableRow[] tableRows,
+            Nullable!string description)
+    {
+        this.keyword = keyword;
+        this.name = name;
+        this.location = location;
+        if (!tableRows.empty)
+        {
+            this.tableHeader = tableRows[0];
+            if (tableRows.length > 1)
+            {
+                this.tableBody = tableRows.dup[1 .. $];
+            }
+        }
+        this.description = description;
+    }
 }

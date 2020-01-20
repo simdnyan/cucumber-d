@@ -29,6 +29,12 @@ abstract class Base
     }
 
     ///
+    string getName()
+    {
+        return name.isNull ? `` : name.get;
+    }
+
+    ///
     JSONValue toJSON() const
     {
         auto json = JSONValue([

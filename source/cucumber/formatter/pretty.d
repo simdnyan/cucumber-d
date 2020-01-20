@@ -103,22 +103,7 @@ class Pretty : Formatter
         }
 
         this.step(step, stepResult.result, stepResult.location);
-        if (!step.docString.isNull)
-        {
-            with (step.docString.get)
-            {
-                writeln("      ", color(stepResult.result), delimiter);
-                writeln(content.split("\n").map!(x => "      " ~ x).array.join("\n"));
-                writeln("      ", delimiter, color("reset"));
-            }
-        }
-        if (!step.dataTable.isNull)
-        {
-            foreach (row; step.dataTable.get.rows)
-            {
-                tableRow(row, step.dataTable.get.rows, SKIPPED);
-            }
-        }
+
         if (stepResult.isFailed)
         {
             error(stepResult.exception, "    ");
@@ -154,8 +139,8 @@ class Pretty : Formatter
             {
                 auto text = "cucumber " ~ featureResult.feature.parent.uri ~ ":"
                     ~ scenarioResult.scenario.location.line.to!string;
-                auto source = scenarioResult.scenario.keyword ~ `: ` ~ (scenarioResult.scenario.name.isNull
-                        ? `` : scenarioResult.scenario.name.get);
+                auto source = scenarioResult.scenario.keyword ~ `: ` ~ (
+                        scenarioResult.scenario.getName);
                 if (!scenarioResult.exampleNumber.isNull)
                 {
                     source ~= ", Examples (#" ~ scenarioResult.exampleNumber.get.to!string ~ `)`;
@@ -208,7 +193,7 @@ private:
             string line = extraIndent ~ keyword ~ ": ";
             static if (is(typeof(name) == Nullable!string))
             {
-                line ~= name.isNull ? `` : name.get;
+                line ~= getName;
             }
             else static if (is(typeof(element) == Step))
             {
@@ -258,6 +243,22 @@ private:
             write(color("gray"), " # ", location, color("reset"));
         }
         writeln;
+        if (!step.docString.isNull)
+        {
+            with (step.docString.get)
+            {
+                writeln("      ", color(resultColor), delimiter);
+                writeln(content.split("\n").map!(x => "      " ~ x).array.join("\n"));
+                writeln("      ", delimiter, color("reset"));
+            }
+        }
+        if (!step.dataTable.empty)
+        {
+            foreach (row; step.dataTable.rows)
+            {
+                tableRow(row, step.dataTable.rows, SKIPPED);
+            }
+        }
     }
 
     void setScenarioStringLength(ref Scenario scenario)
@@ -266,8 +267,7 @@ private:
         {
             return;
         }
-        scenarioStringLength = scenario.keyword.walkLength + (scenario.name.isNull
-                ? 0 : scenario.name.get.walkLength);
+        scenarioStringLength = scenario.keyword.walkLength + scenario.getName.walkLength;
         foreach (step; scenario.steps)
         {
             auto stepStringLength = (step.keyword ~ (step.text)).walkLength;
@@ -278,8 +278,12 @@ private:
 
     void setCellSize(TableRow[] rows)
     {
+        if (rows.empty)
+        {
+            return;
+        }
         this.table = rows;
-        cellSizes = 0LU.repeat(rows.length).array;
+        cellSizes = 0LU.repeat(rows[0].cells.length).array;
         foreach (i, row; rows)
         {
             foreach (j, cell; row.cells)
@@ -300,8 +304,8 @@ private:
             string cellString;
             if (!cell.value.empty)
             {
-                cellString = color(resultColor) ~
-                        cell.value.leftJustifier(cellSizes[i]).to!string ~ color("reset");
+                cellString = color(resultColor) ~ cell.value.leftJustifier(cellSizes[i])
+                    .to!string ~ color("reset");
             }
             cellStrings ~= cellString;
         }

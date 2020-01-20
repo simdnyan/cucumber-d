@@ -82,27 +82,27 @@ public:
         {
             outputComments(examples.location.line);
             formatter.examples(examples);
-            if (examples.tableHeader.isNull)
+            if (examples.tableHeader.empty)
             {
                 continue;
             }
 
-            auto table = examples.tableBody ~ examples.tableHeader.get;
-            outputComments(examples.tableHeader.get.location.line);
-            formatter.tableRow(examples.tableHeader.get, table, "skipped");
+            auto table = examples.tableBody ~ examples.tableHeader;
+            outputComments(examples.tableHeader.location.line);
+            formatter.tableRow(examples.tableHeader, table, "skipped");
 
             foreach (i, row; examples.tableBody)
             {
                 ScenarioResult result;
 
                 string[string] examplesValues = null;
-                foreach (example; zip(examples.tableHeader.get.cells, row.cells))
+                foreach (example; zip(examples.tableHeader.cells, row.cells))
                 {
                     examplesValues[example[0].value] = example[1].value;
                 }
 
-                auto _scenario = new Scenario(scenario.keyword, scenario.name.isNull
-                        ? `` : scenario.name.get, row.location, scenario.parent, false);
+                auto _scenario = new Scenario(scenario.keyword,
+                        scenario.getName, row.location, scenario.parent, false);
                 _scenario.tags = scenario.tags;
                 _scenario.isScenarioOutline = true;
                 foreach (step; scenario.steps)
@@ -110,7 +110,7 @@ public:
                     auto _step = step;
                     foreach (k, v; examplesValues)
                     {
-                        _step.text = _step.text.replace(`<` ~ k ~ `>`, v);
+                        _step.replace(`<` ~ k ~ `>`, v);
                     }
                     _scenario.steps ~= _step;
                 }
@@ -207,7 +207,18 @@ public:
             {
                 try
                 {
-                    func();
+                    if (!step.docString.isNull)
+                    {
+                        func(step.docString.get);
+                    }
+                    else if (!step.dataTable.empty)
+                    {
+                        func(step.dataTable);
+                    }
+                    else
+                    {
+                        func();
+                    }
                 }
                 catch (Exception e)
                 {

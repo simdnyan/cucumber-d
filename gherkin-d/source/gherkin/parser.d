@@ -302,26 +302,12 @@ class Parser
 
             Examples finalize()
             {
-                Nullable!TableRow tableHeader;
-                TableRow[] tableBody;
-                if (!tableRows.empty)
-                {
-                    tableHeader = tableRows[0];
-                    if (tableRows.length > 1)
-                    {
-                        tableBody = tableRows[1 .. $];
-                    }
-                }
                 auto examples = Examples(token.keyword[0 .. $ - 1],
-                        token.text.stripLeft, token.location, tableHeader, tableBody);
+                        token.text.stripLeft, token.location, tableRows, description);
                 foreach (i, tag; examplesTags)
                 {
                     tag.id = (id++).to!string;
                     examples.tags ~= tag;
-                }
-                if (!description.isNull)
-                {
-                    examples.description = description;
                 }
 
                 return examples;

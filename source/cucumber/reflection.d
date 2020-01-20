@@ -7,6 +7,9 @@ import std.typetuple;
 import std.regex;
 import std.conv;
 
+import gherkin.docstring : DocString;
+import gherkin.datatable : DataTable;
+
 private template isMatchStruct(alias T)
 {
     static if (__traits(compiles, typeof(T)))
@@ -70,6 +73,8 @@ unittest
 }
 
 alias CucumberStepFunction = void function(in string[] = []);
+alias CucumberStepFunctionWithDocString = void function(in string[] = [], DocString = DocString());
+alias CucumberStepFunctionWithDataTable = void function(in string[] = [], DataTable = DataTable());
 
 ///
 struct CucumberStep
@@ -82,9 +87,34 @@ struct CucumberStep
     }
 
     ///
-    this(in CucumberStepFunction func, Regex!char reg, int id, in string source)
+    this(in CucumberStepFunctionWithDocString func, in string reg, int id, in string source)
     {
-        this.func = func;
+        this(func, std.regex.regex(reg), id, source);
+        this.regexString = reg;
+    }
+
+    ///
+    this(in CucumberStepFunctionWithDataTable func, in string reg, int id, in string source)
+    {
+        this(func, std.regex.regex(reg), id, source);
+        this.regexString = reg;
+    }
+
+    ///
+    this(T)(in T func, Regex!char reg, int id, in string source)
+    {
+        static if (is(T == CucumberStepFunction))
+        {
+            this.func = func;
+        }
+        else static if (is(T == CucumberStepFunctionWithDataTable))
+        {
+            this.funcWithDataTable = func;
+        }
+        else static if (is(T == CucumberStepFunctionWithDocString))
+        {
+            this.funcWithDocString = func;
+        }
         this.regex = reg;
         this.id = id;
         this.source = source;
@@ -92,6 +122,10 @@ struct CucumberStep
 
     ///
     CucumberStepFunction func;
+    ///
+    CucumberStepFunctionWithDocString funcWithDocString;
+    ///
+    CucumberStepFunctionWithDataTable funcWithDataTable;
     ///
     Regex!char regex;
     ///
@@ -133,15 +167,46 @@ auto findSteps(ModuleNames...)()
 
                     enum funcArity = arity!(mixin(member));
                     enum numCaptures = countParenPairs!reg;
-                    static assert(funcArity == numCaptures, text("Arity of ", member, " (", funcArity, ")",
-                            " does not match the number of capturing parens (",
-                            numCaptures, ") in ", getRegex!(mixin(member))));
 
-                    //e.g. funcCall would be "myfunc(captures[0], captures[1]);"
-                    enum funcCall = member ~ argsStringWithParens!(reg, mixin(member)) ~ ";";
+                    static if (is(Unconst!(Parameters!(mixin(member))[$ - 1]) == DocString)
+                            || is(Unconst!(Parameters!(mixin(member))[$ - 1]) == DataTable))
+                    {
+                        static assert(funcArity == numCaptures + 1, text("Arity of ", member, " (", funcArity, ")",
+                                " does not match the number of capturing parens (",
+                                numCaptures, " + 1) in ", getRegex!(mixin(member))));
 
-                    //e.g. lambda would be "(captures) { myfunc(captures[0]); }"
-                    enum lambda = "(captures) { " ~ funcCall ~ " }";
+                        static if (is(Unconst!(Parameters!(mixin(member))[$ - 1]) == DocString))
+                        {
+                            enum arg = "docString";
+                            enum type = "DocString";
+                        }
+                        else static if (
+                            is(Unconst!(Parameters!(mixin(member))[$ - 1]) == DataTable))
+                        {
+                            enum arg = "dataTable";
+                            enum type = "DataTable";
+                        }
+
+                        //e.g. funcCall would be "myfunc(captures[0], captures[1], arg);"
+                        enum funcCall = member ~ "(" ~ argsString!(reg, mixin(member), arg) ~ ");";
+
+                        //e.g. lambda would be "(in string[] captures, Arg arg) { myfunc(captures[0], captures[1], docString); }"
+                        enum lambda = "(in string[] captures, " ~ type ~ " "
+                            ~ arg ~ ") { " ~ funcCall ~ " }";
+                    }
+                    else
+                    {
+                        static assert(funcArity == numCaptures, text("Arity of ", member, " (", funcArity, ")",
+                                " does not match the number of capturing parens (",
+                                numCaptures, ") in ", getRegex!(mixin(member))));
+
+                        //e.g. funcCall would be "myfunc(captures[0], captures[1]);"
+                        enum funcCall = member ~ argsStringWithParens!(reg, mixin(member)) ~ ";";
+
+                        //e.g. lambda would be "(captures) { myfunc(captures[0]); }"
+                        enum lambda = "(captures) { " ~ funcCall ~ " }";
+
+                    }
 
                     //e.g. mymod.myfunc:13
                     enum source = `"` ~ mod ~ "." ~ member ~ `:` ~ getLineNumber!(mixin(member))
@@ -171,6 +236,10 @@ struct MatchResult
     ///
     CucumberStepFunction func;
     ///
+    CucumberStepFunctionWithDocString funcWithDocString;
+    ///
+    CucumberStepFunctionWithDataTable funcWithDataTable;
+    ///
     const(string)[] captures;
     ///
     int id;
@@ -178,15 +247,35 @@ struct MatchResult
     string regex;
     ///
     string source;
+
     ///
-    this(in CucumberStepFunction func, in string[] captures, in int id,
-            in string regex, in string source)
+    this(in CucumberStepFunction func, in CucumberStepFunctionWithDocString funcWithDocString,
+            in CucumberStepFunctionWithDataTable funcWithDataTable,
+            in string[] captures, in int id, in string regex, in string source)
     {
         this.func = func;
+        this.funcWithDocString = funcWithDocString;
+        this.funcWithDataTable = funcWithDataTable;
         this.captures = captures;
         this.id = id;
         this.regex = regex;
         this.source = source;
+    }
+
+    ///
+    void opCall(DocString docString) const
+    {
+        if (funcWithDocString is null)
+            throw new Exception("MatchResult with null function");
+        funcWithDocString(captures, docString);
+    }
+
+    ///
+    void opCall(DataTable dataTable) const
+    {
+        if (funcWithDataTable is null)
+            throw new Exception("MatchResult with null function");
+        funcWithDataTable(captures, dataTable);
     }
 
     ///
@@ -200,7 +289,7 @@ struct MatchResult
     ///
     bool opCast(T : bool)() const
     {
-        return func !is null;
+        return !(func is null && funcWithDocString is null && funcWithDataTable is null);
     }
 }
 
@@ -220,8 +309,8 @@ MatchResult findMatch(ModuleNames...)(string step_str)
         {
             import std.array : array;
 
-            return MatchResult(step.func, m.captures.array, step.id,
-                    step.regexString, step.source);
+            return MatchResult(step.func, step.funcWithDocString, step.funcWithDataTable,
+                    m.captures.array, step.id, step.regexString, step.source);
         }
     }
 
@@ -291,17 +380,23 @@ unittest
  * associated with regexen. Meant to be used with mixin to
  * generate code.
  */
-string argsString(string reg, alias func)()
+string argsString(string reg, alias func, string extraArg = "")()
 {
+    import std.string : empty;
+
     enum convs = conversionsFromString!(ParameterTypeTuple!func);
     enum numCaptures = countParenPairs!reg;
-    static assert(convs.length == numCaptures, text("Wrong length for ", convs,
-            ", should be ", numCaptures));
+    static assert(convs.length == numCaptures + (extraArg.empty ? 0 : 1),
+            text("Wrong length for ", convs, ", should be ", numCaptures));
 
     string[] args;
     foreach (i; 0 .. numCaptures)
     {
         args ~= "captures[" ~ (i + 1).to!string ~ "]" ~ convs[i];
+    }
+    if (!extraArg.empty)
+    {
+        args ~= extraArg;
     }
 
     import std.array : join;
@@ -347,6 +442,13 @@ unittest
 
     static assert(argsString!(r"(foo)...(bar)",
             func_dd) == "captures[1].to!double, captures[2].to!double");
+
+    void funcWithExtraArg(int, DataTable)
+    {
+    }
+
+    static assert(argsString!(r"(foo)...", funcWithExtraArg,
+            "extra") == "captures[1].to!int, extra");
 }
 
 /**
