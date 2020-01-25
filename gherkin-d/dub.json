@@ -17,7 +17,6 @@
 		{
 			"name": "unittest",
 			"dependencies": {
-				"d-glob": "~>0.4.0",
 				"unit-threaded:assertions": "~>0.10.4"
 			}
 		}

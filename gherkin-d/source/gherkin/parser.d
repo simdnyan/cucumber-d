@@ -494,11 +494,9 @@ class Parser
         import std.algorithm : canFind;
         import std.file : readText;
         import std.json : parseJSON;
-        import std.path : baseName;
+        import std.path : baseName, dirName;
         import std.string : replace;
         import unit_threaded.assertions : should;
-
-        import glob : glob;
 
         const auto ignoredFeatureFiles = [
             // dfmt off
@@ -520,7 +518,9 @@ class Parser
             // dfmt on
         ];
 
-        foreach (featureFile; glob(`cucumber/gherkin/testdata/*/*.feature`))
+        foreach (featureFile; getFeatureFiles([
+                    ``, __FILE__.dirName ~ "/../../cucumber/gherkin/testdata/"
+                ]))
         {
             if (ignoredFeatureFiles.canFind(baseName(featureFile, ".feature")))
             {
@@ -529,7 +529,7 @@ class Parser
             immutable auto expected = parseJSON(readText(featureFile ~ `.ast.ndjson`));
             auto actual = parseFromFile(featureFile);
 
-            actual.uri = actual.uri.replace("cucumber/gherkin/", "");
+            actual.uri = actual.uri.replace(__FILE__.dirName ~ "/../../cucumber/gherkin/", "");
             actual.toJSON.should == expected;
         }
     }

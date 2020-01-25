@@ -11,8 +11,7 @@ matrix:
 
 script:
   - dub test -b unittest-cov
-  - cd gherkin-d
-  - dub test -b unittest-cov
+  - dub test :gherkin-d -b unittest-cov
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

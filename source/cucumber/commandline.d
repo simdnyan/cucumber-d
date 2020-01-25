@@ -6,7 +6,6 @@ import cucumber.formatter;
 import cucumber.result : RunResult;
 import cucumber.runner : CucumberRunner;
 import gherkin : GherkinDocument, Parser, getFeatureFiles;
-import glob : glob;
 
 /**
  * CucumberCommandLine
