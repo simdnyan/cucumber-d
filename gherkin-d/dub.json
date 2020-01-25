@@ -16,6 +16,7 @@
 		},
 		{
 			"name": "unittest",
+			"targetType": "executable",
 			"dependencies": {
 				"unit-threaded:assertions": "~>0.10.4"
 			}
