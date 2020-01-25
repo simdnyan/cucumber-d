@@ -1,0 +1,18 @@
+---
+language: d
+sudo: false
+
+matrix:
+  include:
+    - d: dmd-nightly
+    - d: dmd-2.090.0
+  allow_failures:
+    - d: dmd-nightly
+
+script:
+  - dub test -b unittest-cov
+  - cd gherkin-d
+  - dub test -b unittest-cov
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
