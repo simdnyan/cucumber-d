@@ -9,6 +9,7 @@
 	"dependencies": {
 		"asdf": "~>0.5.3"
 	},
+	"targetType": "library",
 	"configurations": [
 		{
 			"name": "default",

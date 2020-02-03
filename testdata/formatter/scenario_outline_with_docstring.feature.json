@@ -1,0 +1,64 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/scenario_outline_with_docstring.feature",
+    "id": "scenario-outline-with-a-docstring",
+    "keyword": "Feature",
+    "name": "Scenario Outline with a docstring",
+    "description": "",
+    "line": 1,
+    "elements": [
+      {
+        "id": "scenario-outline-with-a-docstring;greetings-come-in-many-forms;;2",
+        "keyword": "Scenario Outline",
+        "name": "Greetings come in many forms",
+        "description": "",
+        "line": 11,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "this file:",
+            "line": 4,
+            "doc_string": {
+              "value": "Greeting:Hello",
+              "content_type": "<type>",
+              "line": 5
+            },
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/scenario_outline_with_docstring.feature:11"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "scenario-outline-with-a-docstring;greetings-come-in-many-forms;;3",
+        "keyword": "Scenario Outline",
+        "name": "Greetings come in many forms",
+        "description": "",
+        "line": 12,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "this file:",
+            "line": 4,
+            "doc_string": {
+              "value": "Greeting:Bonjour",
+              "content_type": "<type>",
+              "line": 5
+            },
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/scenario_outline_with_docstring.feature:12"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -8,6 +8,7 @@ import std.typecons : Nullable;
 
 import asdf : serializeToJson;
 import gherkin.base : Base;
+import gherkin.comment : Comment;
 import gherkin.document : GherkinDocument;
 import gherkin.location : Location;
 import gherkin.scenario : Scenario;
@@ -24,6 +25,8 @@ class Feature : Base
     Nullable!string description;
     ///
     Tag[] tags;
+    ///
+    Comment[] comments;
     ///
     string language = "en";
     ///

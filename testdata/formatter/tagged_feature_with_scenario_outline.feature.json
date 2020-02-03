@@ -1,0 +1,72 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/tagged_feature_with_scenario_outline.feature",
+    "id": "foo",
+    "keyword": "Feature",
+    "name": "Foo",
+    "description": "",
+    "line": 2,
+    "tags": [
+      {
+        "name": "@sometag",
+        "line": 1
+      }
+    ],
+    "elements": [
+      {
+        "id": "foo;bar;;2",
+        "keyword": "Scenario Outline",
+        "name": "Bar",
+        "description": "",
+        "line": 9,
+        "type": "scenario",
+        "tags": [
+          {
+            "name": "@sometag",
+            "line": 1
+          }
+        ],
+        "steps": [
+          {
+            "keyword": "Then ",
+            "name": "Baz",
+            "line": 5,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/tagged_feature_with_scenario_outline.feature:9"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "foo;bar;;3",
+        "keyword": "Scenario Outline",
+        "name": "Bar",
+        "description": "",
+        "line": 10,
+        "type": "scenario",
+        "tags": [
+          {
+            "name": "@sometag",
+            "line": 1
+          }
+        ],
+        "steps": [
+          {
+            "keyword": "Then ",
+            "name": "Baz",
+            "line": 5,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/tagged_feature_with_scenario_outline.feature:10"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

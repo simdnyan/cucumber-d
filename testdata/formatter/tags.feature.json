@@ -1,0 +1,191 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/tags.feature",
+    "id": "minimal-scenario-outline",
+    "keyword": "Feature",
+    "name": "Minimal Scenario Outline",
+    "description": "",
+    "line": 3,
+    "tags": [
+      {
+        "name": "@feature_tag1",
+        "line": 1
+      },
+      {
+        "name": "@feature_tag2",
+        "line": 1
+      },
+      {
+        "name": "@feature_tag3",
+        "line": 2
+      }
+    ],
+    "elements": [
+      {
+        "id": "minimal-scenario-outline;minimalistic",
+        "keyword": "Scenario",
+        "name": "minimalistic",
+        "description": "",
+        "line": 7,
+        "type": "scenario",
+        "tags": [
+          {
+            "name": "@feature_tag1",
+            "line": 1
+          },
+          {
+            "name": "@feature_tag2",
+            "line": 1
+          },
+          {
+            "name": "@feature_tag3",
+            "line": 2
+          },
+          {
+            "name": "@scenario_tag1",
+            "line": 5
+          },
+          {
+            "name": "@scenario_tag2",
+            "line": 5
+          },
+          {
+            "name": "@scenario_tag3",
+            "line": 6
+          }
+        ],
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism",
+            "line": 8,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/tags.feature:8"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "minimal-scenario-outline;minimalistic-outline;;2",
+        "keyword": "Scenario Outline",
+        "name": "minimalistic outline",
+        "description": "",
+        "line": 19,
+        "type": "scenario",
+        "tags": [
+          {
+            "name": "@feature_tag1",
+            "line": 1
+          },
+          {
+            "name": "@feature_tag2",
+            "line": 1
+          },
+          {
+            "name": "@feature_tag3",
+            "line": 2
+          },
+          {
+            "name": "@so_tag1",
+            "line": 10
+          },
+          {
+            "name": "@so_tag2",
+            "line": 10
+          },
+          {
+            "name": "@so_tag3",
+            "line": 11
+          },
+          {
+            "name": "@ex_tag1",
+            "line": 15
+          },
+          {
+            "name": "@ex_tag2",
+            "line": 15
+          },
+          {
+            "name": "@ex_tag3",
+            "line": 16
+          }
+        ],
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism",
+            "line": 13,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/tags.feature:19"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "minimal-scenario-outline;minimalistic-outline;;2",
+        "keyword": "Scenario Outline",
+        "name": "minimalistic outline",
+        "description": "",
+        "line": 25,
+        "type": "scenario",
+        "tags": [
+          {
+            "name": "@feature_tag1",
+            "line": 1
+          },
+          {
+            "name": "@feature_tag2",
+            "line": 1
+          },
+          {
+            "name": "@feature_tag3",
+            "line": 2
+          },
+          {
+            "name": "@so_tag1",
+            "line": 10
+          },
+          {
+            "name": "@so_tag2",
+            "line": 10
+          },
+          {
+            "name": "@so_tag3",
+            "line": 11
+          },
+          {
+            "name": "@ex_tag4",
+            "line": 21
+          },
+          {
+            "name": "@ex_tag5",
+            "line": 21
+          },
+          {
+            "name": "@ex_tag6",
+            "line": 22
+          }
+        ],
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the more minimalism",
+            "line": 13,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/tags.feature:25"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

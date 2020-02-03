@@ -1,0 +1,94 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/background.feature",
+    "id": "background",
+    "keyword": "Feature",
+    "name": "Background",
+    "description": "",
+    "line": 1,
+    "elements": [
+      {
+        "keyword": "Background",
+        "name": "a simple background",
+        "description": "",
+        "line": 3,
+        "type": "background",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism inside a background",
+            "line": 4,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/background.feature:4"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "background;minimalistic",
+        "keyword": "Scenario",
+        "name": "minimalistic",
+        "description": "",
+        "line": 7,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism",
+            "line": 8,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/background.feature:8"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Background",
+        "name": "a simple background",
+        "description": "",
+        "line": 3,
+        "type": "background",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism inside a background",
+            "line": 4,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/background.feature:4"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": "background;also-minimalistic",
+        "keyword": "Scenario",
+        "name": "also minimalistic",
+        "description": "",
+        "line": 10,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "the minimalism",
+            "line": 11,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/background.feature:11"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

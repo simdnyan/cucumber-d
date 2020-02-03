@@ -6,6 +6,7 @@ import std.typecons : Nullable;
 
 import asdf : serializationIgnoreOutIf, serializationTransformOut, serializeToJson;
 import gherkin.base : Base;
+import gherkin.comment : Comment;
 import gherkin.datatable : TableRow;
 import gherkin.feature : Feature;
 import gherkin.location : Location;
@@ -31,6 +32,8 @@ class Scenario : Base
     Examples[] examples;
     ///
     Tag[] tags;
+    ///
+    Comment[] comments;
     ///
     bool isScenarioOutline;
 

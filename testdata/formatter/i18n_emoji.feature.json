@@ -1,0 +1,33 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/i18n_emoji.feature",
+    "id": "🙈🙉🙊",
+    "keyword": "📚",
+    "name": "🙈🙉🙊",
+    "description": "",
+    "line": 2,
+    "elements": [
+      {
+        "id": "🙈🙉🙊;💃",
+        "keyword": "📕",
+        "name": "💃",
+        "description": "",
+        "line": 4,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "😐",
+            "name": "🎸",
+            "line": 5,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/i18n_emoji.feature:5"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

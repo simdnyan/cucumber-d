@@ -1,0 +1,33 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/rule_without_name_and_description.feature",
+    "id": "",
+    "keyword": "Feature",
+    "name": "",
+    "description": "  Rule:",
+    "line": 1,
+    "elements": [
+      {
+        "id": ";",
+        "keyword": "Scenario",
+        "name": "",
+        "description": "",
+        "line": 4,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "text",
+            "line": 5,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/rule_without_name_and_description.feature:5"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/scenario_outlines_with_tags.feature",
+    "id": "",
+    "keyword": "Feature",
+    "name": "",
+    "description": "",
+    "line": 2,
+    "tags": [
+      {
+        "name": "@a",
+        "line": 1
+      }
+    ],
+    "elements": [
+      {
+        "id": ";;;2",
+        "keyword": "Scenario Outline",
+        "name": "",
+        "description": "",
+        "line": 9,
+        "type": "scenario",
+        "tags": [
+          {
+            "name": "@a",
+            "line": 1
+          },
+          {
+            "name": "@b",
+            "line": 3
+          },
+          {
+            "name": "@c",
+            "line": 3
+          }
+        ],
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "y",
+            "line": 5,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/scenario_outlines_with_tags.feature:9"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      },
+      {
+        "id": ";;;2",
+        "keyword": "Scenario Outline",
+        "name": "",
+        "description": "",
+        "line": 18,
+        "type": "scenario",
+        "tags": [
+          {
+            "name": "@a",
+            "line": 1
+          },
+          {
+            "name": "@d",
+            "line": 11
+          },
+          {
+            "name": "@e",
+            "line": 11
+          },
+          {
+            "name": "@f",
+            "line": 15
+          }
+        ],
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "n",
+            "line": 13,
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/scenario_outlines_with_tags.feature:18"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

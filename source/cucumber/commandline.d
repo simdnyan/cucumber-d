@@ -20,19 +20,26 @@ class CucumberCommandline
      */
     int run(ModuleNames...)(string[] args)
     {
+        string require;
         string format;
         bool dryRun;
         bool noColor;
         bool quiet;
         bool noSnippets;
         bool noSource;
+        bool strict;
         // dfmt off
         auto opts = getopt(args,
+                std.getopt.config.caseSensitive,
+                "r|require", "Implemented for compatibility. Do nothing.",
+                &require,
                 "d|dry-run", "Invokes formatters without executing the steps.",
                 &dryRun,
                 "f|format", "How to format features (Default: pretty). Available formats:
-               pretty   : Prints the feature as is - in colours.
-               progress : Prints one character per scenario.",
+                   json        : Prints the feature as JSON
+                   json_pretty : Prints the feature as prettified JSON
+                   pretty      : Prints the feature as is - in colours.
+                   progress    : Prints one character per scenario.",
                 &format,
                 "no-color", "Whether or not to use ANSI color in the output.",
                 &noColor,
@@ -42,6 +49,8 @@ class CucumberCommandline
                 &noSource,
                 "q|quiet", "Alias for --no-snippets --no-source.",
                 &quiet,
+                "S|strict", "Fail if there are any strict affected results.",
+                &strict,
                 std.getopt.config.passThrough);
         // dfmt on
         noSnippets |= quiet;
@@ -56,6 +65,12 @@ class CucumberCommandline
         Formatter formatter;
         switch (format)
         {
+        case "json":
+            formatter = new Json(noColor, noSnippets, noSource);
+            break;
+        case "json_pretty":
+            formatter = new Json(noColor, noSnippets, noSource, true);
+            break;
         case "progress":
             formatter = new Progress(noColor, noSnippets, noSource);
             break;
@@ -77,6 +92,11 @@ class CucumberCommandline
 
         formatter.summarizeResult(result);
 
-        return result.exitCode;
+        immutable auto scenarioResultSummary = result.resultSummaries["scenarios"];
+        if (strict)
+        {
+            return scenarioResultSummary.passed == scenarioResultSummary.total ? 0 : 1;
+        }
+        return scenarioResultSummary.failed == 0 ? 0 : 1;
     }
 }

@@ -45,23 +45,7 @@ class Pretty : Formatter
     ///
     override void scenario(ref Scenario scenario)
     {
-        if (scenario.isScenarioOutline)
-        {
-            return;
-        }
         base(scenario, "  ");
-    }
-
-    ///
-    override void scenarioOutline(ref Scenario scenario)
-    {
-        base(scenario, "  ");
-        foreach (step; scenario.steps)
-        {
-            this.step(step, SKIPPED,
-                    scenario.parent.parent.uri ~ `:` ~ step.location.line.to!string);
-        }
-        writeln;
     }
 
     ///
@@ -97,11 +81,6 @@ class Pretty : Formatter
     ///
     override void step(Step step, StepResult stepResult)
     {
-        if (step.parent.isScenarioOutline)
-        {
-            return;
-        }
-
         this.step(step, stepResult.result, stepResult.location);
 
         if (stepResult.isFailed)
@@ -141,9 +120,9 @@ class Pretty : Formatter
                     ~ scenarioResult.scenario.location.line.to!string;
                 auto source = scenarioResult.scenario.keyword ~ `: ` ~ (
                         scenarioResult.scenario.getName);
-                if (!scenarioResult.exampleNumber.isNull)
+                if (!scenarioResult.exampleNumber > 0)
                 {
-                    source ~= ", Examples (#" ~ scenarioResult.exampleNumber.get.to!string ~ `)`;
+                    source ~= ", Examples (#" ~ scenarioResult.exampleNumber.to!string ~ `)`;
                 }
 
                 auto failingScenario = FailingScenario(text, source);

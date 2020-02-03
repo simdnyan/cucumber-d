@@ -1,0 +1,134 @@
+[
+  {
+    "uri": "gherkin-d/cucumber/gherkin/testdata/good/docstrings.feature",
+    "id": "docstring-variations",
+    "keyword": "Feature",
+    "name": "DocString variations",
+    "description": "",
+    "line": 1,
+    "elements": [
+      {
+        "id": "docstring-variations;minimalistic",
+        "keyword": "Scenario",
+        "name": "minimalistic",
+        "description": "",
+        "line": 3,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "a simple DocString",
+            "line": 4,
+            "doc_string": {
+              "value": "first line (no indent)\n  second line (indented with two spaces)\n\nthird line was empty",
+              "content_type": "",
+              "line": 5
+            },
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/docstrings.feature:4"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "Given ",
+            "name": "a DocString with content type",
+            "line": 11,
+            "doc_string": {
+              "value": "<foo>\n  <bar />\n</foo>",
+              "content_type": "xml",
+              "line": 12
+            },
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/docstrings.feature:11"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "a DocString with wrong indentation",
+            "line": 17,
+            "doc_string": {
+              "value": "wrongly indented line",
+              "content_type": "",
+              "line": 18
+            },
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/docstrings.feature:17"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "a DocString with alternative separator",
+            "line": 21,
+            "doc_string": {
+              "value": "first line\nsecond line",
+              "content_type": "",
+              "line": 22
+            },
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/docstrings.feature:21"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "a DocString with normal separator inside",
+            "line": 26,
+            "doc_string": {
+              "value": "first line\n\"\"\"\nthird line",
+              "content_type": "",
+              "line": 27
+            },
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/docstrings.feature:26"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "a DocString with alternative separator inside",
+            "line": 32,
+            "doc_string": {
+              "value": "first line\n```\nthird line",
+              "content_type": "",
+              "line": 33
+            },
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/docstrings.feature:32"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "a DocString with escaped separator inside",
+            "line": 38,
+            "doc_string": {
+              "value": "first line\n\"\"\"\nthird line",
+              "content_type": "",
+              "line": 39
+            },
+            "match": {
+              "location": "gherkin-d/cucumber/gherkin/testdata/good/docstrings.feature:38"
+            },
+            "result": {
+              "status": "undefined"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
