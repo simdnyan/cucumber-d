@@ -4,7 +4,7 @@ import std.json : parseJSON, JSONValue;
 import std.string : empty;
 import std.typecons : Nullable;
 
-import asdf : serializeToJson;
+import asdf : serializationIgnoreOutIf, serializationTransformOut, serializeToJson;
 import gherkin.location;
 
 ///
@@ -13,7 +13,7 @@ abstract class Base
     ///
     string keyword;
     ///
-    Nullable!string name;
+    @serializationIgnoreOutIf!`a.isNull`@serializationTransformOut!`a.get` Nullable!string name;
     ///
     Location location;
 
@@ -32,20 +32,5 @@ abstract class Base
     string getName()
     {
         return name.isNull ? `` : name.get;
-    }
-
-    ///
-    JSONValue toJSON() const
-    {
-        auto json = JSONValue([
-                "keyword": JSONValue(keyword),
-                "location": parseJSON(serializeToJson(location))
-                ]);
-        if (!name.isNull)
-        {
-            json["name"] = JSONValue(name.get);
-        }
-
-        return json;
     }
 }

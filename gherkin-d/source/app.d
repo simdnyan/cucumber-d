@@ -1,8 +1,10 @@
 module gherkin.app;
 
 import std.getopt;
+import std.json : JSONValue, parseJSON;
 import std.stdio : writeln;
 
+import asdf : serializeToJson;
 import gherkin.parser : Parser;
 import gherkin.util : getFeatureFiles;
 
@@ -31,7 +33,7 @@ void main(string[] args)
         const auto document = Parser.parseFromFile(featureFile);
         if (!noAst)
         {
-            document.toJSON.writeln;
+            JSONValue(["gherkinDocument": parseJSON(document.serializeToJson)]).writeln;
         }
     }
 }

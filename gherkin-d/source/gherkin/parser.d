@@ -496,6 +496,7 @@ class Parser
 
     unittest
     {
+        import asdf : serializeToJson;
         import std.algorithm : canFind;
         import std.file : readText;
         import std.json : parseJSON;
@@ -531,11 +532,11 @@ class Parser
             {
                 continue;
             }
-            immutable auto expected = parseJSON(readText(featureFile ~ `.ast.ndjson`));
+            auto expected = parseJSON(readText(featureFile ~ `.ast.ndjson`));
             auto actual = parseFromFile(featureFile);
 
             actual.uri = actual.uri.replace(__FILE__.dirName ~ "/../../cucumber/gherkin/", "");
-            actual.toJSON.should == expected;
+            parseJSON(actual.serializeToJson).should == expected["gherkinDocument"];
         }
     }
 }

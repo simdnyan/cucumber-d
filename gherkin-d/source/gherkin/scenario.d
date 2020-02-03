@@ -4,7 +4,7 @@ import std.json : JSONValue, parseJSON;
 import std.range : empty;
 import std.typecons : Nullable;
 
-import asdf : serializationIgnoreOutIf, serializationTransformOut, serializeToJson;
+import asdf : serializationIgnore, serializationIgnoreOutIf, serializationTransformOut;
 import gherkin.base : Base;
 import gherkin.comment : Comment;
 import gherkin.datatable : TableRow;
@@ -19,23 +19,23 @@ alias Background = Scenario;
 class Scenario : Base
 {
     ///
-    Feature parent;
+    @serializationIgnore Feature parent;
     ///
-    bool isBackground;
+    @serializationIgnore bool isBackground;
     ///
-    Nullable!string id;
+    @serializationIgnoreOutIf!`a.isNull`@serializationTransformOut!`a.get` Nullable!string id;
     ///
-    Step[] steps;
+    @serializationIgnoreOutIf!`a.empty` Step[] steps;
     ///
-    Nullable!string description;
+    @serializationIgnoreOutIf!`a.isNull`@serializationTransformOut!`a.get` Nullable!string description;
     ///
-    Examples[] examples;
+    @serializationIgnoreOutIf!`a.empty` Examples[] examples;
     ///
-    Tag[] tags;
+    @serializationIgnoreOutIf!`a.empty` Tag[] tags;
     ///
-    Comment[] comments;
+    @serializationIgnore Comment[] comments;
     ///
-    bool isScenarioOutline;
+    @serializationIgnore bool isScenarioOutline;
 
     ///
     this(string keyword, string name, Location location, Feature parent, bool isBackground)
@@ -43,35 +43,6 @@ class Scenario : Base
         super(keyword, name, location);
         this.parent = parent;
         this.isBackground = isBackground;
-    }
-
-    ///
-    override JSONValue toJSON() const
-    {
-        auto json = super.toJSON;
-
-        if (!id.isNull)
-        {
-            json["id"] = JSONValue(id.get);
-        }
-        if (!steps.empty)
-        {
-            json["steps"] = parseJSON(serializeToJson(steps));
-        }
-        if (!description.isNull)
-        {
-            json["description"] = parseJSON(serializeToJson(description.get));
-        }
-        if (!examples.empty)
-        {
-            json["examples"] = parseJSON(serializeToJson(examples));
-        }
-        if (!tags.empty)
-        {
-            json["tags"] = parseJSON(serializeToJson(tags));
-        }
-
-        return json;
     }
 }
 
@@ -104,6 +75,7 @@ struct Examples
         this.description = rhs.description;
         this.tags = rhs.tags.dup;
     }
+
     ///
     this(string keyword, string name, Location location, TableRow[] tableRows,
             Nullable!string description)
