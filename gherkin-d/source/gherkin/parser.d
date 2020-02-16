@@ -2,13 +2,12 @@ module gherkin.parser;
 
 import std.algorithm.searching : startsWith;
 import std.array : array, empty, join;
-import std.algorithm : map;
+import std.algorithm : each, map;
 import std.conv : to;
 import std.range : back, popBack, repeat, walkLength;
 import std.regex : ctRegex, replace, split;
 import std.string : chomp, replace, split, strip, stripLeft;
 import std.stdio : File;
-import std.typecons : Nullable;
 
 import gherkin;
 
@@ -53,9 +52,10 @@ class Parser
         ulong lineNumber;
         ulong id;
         Tag[] tags;
+        Comment[] comments;
         auto document = GherkinDocument(uri, documentStrings);
 
-        LineToken getToken(string line, ulong lineNumber) //, Token[] tokenStack)
+        LineToken getToken(string line, ulong lineNumber)
         {
             immutable Token[string] tokenStrings = [
                 "#language:" : Token.Language, "Feature:" : Token.Feature,
@@ -126,6 +126,7 @@ class Parser
             auto indentSpaces = ' '.repeat(token.location.column - 1);
             auto separator = token.keyword;
             auto contentType = token.text;
+            comments = [];
 
             while (++lineNumber < documentStrings.length)
             {
@@ -134,6 +135,7 @@ class Parser
                 switch (lineToken.token)
                 {
                 case Token.Comment:
+                    comments ~= Comment(line, lineToken.location);
                     document.comments ~= Comment(line, lineToken.location);
                     break;
                 case Token.DocString:
@@ -170,7 +172,8 @@ class Parser
                     const auto cellStrings = line.replace(ctRegex!(`\|\s*$`),
                             ``).split(ctRegex!(`(?<!\\)\|`));
                     auto column = cellStrings[0].walkLength + 1;
-                    auto row = TableRow((id++).to!string, [], Location(column, lineNumber + 1));
+                    auto row = TableRow((id++).to!string, [], Location(column,
+                            lineNumber + 1), comments);
                     foreach (cellString; cellStrings[1 .. $])
                     {
                         string value;
@@ -204,6 +207,7 @@ class Parser
                 case Token.EmptyLine:
                     break;
                 case Token.Comment:
+                    comments ~= Comment(line, lineToken.location);
                     document.comments ~= Comment(line, lineToken.location);
                     break;
                 default:
@@ -216,10 +220,10 @@ class Parser
             return tableRows;
         }
 
-        Step parseStep(LineToken token, Scenario parent)
+        Step parseStep(LineToken token, Scenario scenario)
         {
             auto line = documentStrings[lineNumber];
-            Step step = Step(token.keyword, token.text, token.location, parent);
+            Step step = Step(token.keyword, token.text, token.location, scenario.uri, comments);
 
             while (++lineNumber < documentStrings.length)
             {
@@ -231,10 +235,13 @@ class Parser
                     step.docString = parseDocString(lineToken);
                     break;
                 case Token.TableRow:
-                    step.dataTable = DataTable(parseTableRows(),
-                            lineToken.location);
+                    comments = [];
+                    auto dataTable = DataTable(parseTableRows(), lineToken.location);
+                    dataTable.rows.each!(r => comments ~= r.comments);
+                    step.dataTable = dataTable;
                     break;
                 case Token.Comment:
+                    comments ~= Comment(line, lineToken.location);
                     document.comments ~= Comment(line, lineToken.location);
                     break;
                 case Token.EmptyLine:
@@ -274,6 +281,7 @@ class Parser
                 switch (lineToken.token)
                 {
                 case Token.Comment:
+                    comments ~= Comment(line, lineToken.location);
                     document.comments ~= Comment(line, lineToken.location);
                     break;
                 case Token.EmptyLine:
@@ -293,18 +301,16 @@ class Parser
         {
             auto line = documentStrings[lineNumber];
             TableRow[] tableRows;
-            Nullable!string description;
-            Tag[] examplesTags;
-            if (!tags.empty)
-            {
-                examplesTags = tags;
-                tags = [];
-            }
+            string description;
+            Tag[] examplesTags = tags;
+            tags = [];
+            Comment[] examplesComments = comments;
+            comments = [];
 
             Examples finalize()
             {
-                auto examples = Examples(token.keyword[0 .. $ - 1],
-                        token.text.stripLeft, token.location, tableRows, description);
+                auto examples = Examples(token.keyword[0 .. $ - 1], token.text.stripLeft,
+                        token.location, tableRows, description, examplesComments);
                 foreach (i, tag; examplesTags)
                 {
                     tag.id = (id++).to!string;
@@ -324,6 +330,7 @@ class Parser
                     tableRows = parseTableRows();
                     break;
                 case Token.Comment:
+                    comments ~= Comment(line, lineToken.location);
                     document.comments ~= Comment(line, lineToken.location);
                     break;
                 case Token.Other:
@@ -344,13 +351,10 @@ class Parser
         {
             auto line = documentStrings[lineNumber];
             auto scenario = new Scenario(token.keyword[0 .. $ - 1], token.text.stripLeft,
-                    token.location, feature, token.token == Token.Background);
+                    token.location, token.token == Token.Background, feature.uri, comments);
             scenario.isScenarioOutline = isScenarioOutline;
-            if (!tags.empty)
-            {
-                scenario.tags = tags;
-                tags = [];
-            }
+            scenario.tags = tags;
+            tags = [];
 
             void update_ids()
             {
@@ -382,6 +386,7 @@ class Parser
                     scenario.description = parseDescription();
                     break;
                 case Token.Comment:
+                    comments ~= Comment(line, lineToken.location);
                     document.comments ~= Comment(line, lineToken.location);
                     break;
                 case Token.EmptyLine:
@@ -400,12 +405,9 @@ class Parser
         {
             auto line = documentStrings[lineNumber];
             auto feature = new Feature(token.keyword[0 .. $ - 1],
-                    token.text.stripLeft, token.location, document);
-            if (!tags.empty)
-            {
-                feature.tags = tags;
-                tags = [];
-            }
+                    token.text.stripLeft, token.location, document.uri, comments);
+            feature.tags = tags;
+            tags = [];
 
             while (++lineNumber < documentStrings.length)
             {
@@ -429,6 +431,7 @@ class Parser
                     parseTag(lineToken);
                     break;
                 case Token.Comment:
+                    comments ~= Comment(line, lineToken.location);
                     document.comments ~= Comment(line, lineToken.location);
                     break;
                 case Token.EmptyLine:
@@ -464,6 +467,7 @@ class Parser
                     parseTag(lineToken);
                     break;
                 case Token.Comment:
+                    comments ~= Comment(line, lineToken.location);
                     document.comments ~= Comment(line, lineToken.location);
                     break;
                 case Token.EmptyLine:

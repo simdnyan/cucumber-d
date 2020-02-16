@@ -1,6 +1,5 @@
 module gherkin.scenario;
 
-import std.json : JSONValue, parseJSON;
 import std.range : empty;
 import std.typecons : Nullable;
 
@@ -8,7 +7,6 @@ import asdf : serializationIgnore, serializationIgnoreOutIf, serializationTransf
 import gherkin.base : Base;
 import gherkin.comment : Comment;
 import gherkin.datatable : TableRow;
-import gherkin.feature : Feature;
 import gherkin.location : Location;
 import gherkin.step : Step;
 import gherkin.tag : Tag;
@@ -19,15 +17,13 @@ alias Background = Scenario;
 class Scenario : Base
 {
     ///
-    @serializationIgnore Feature parent;
-    ///
     @serializationIgnore bool isBackground;
     ///
     @serializationIgnoreOutIf!`a.isNull`@serializationTransformOut!`a.get` Nullable!string id;
     ///
     @serializationIgnoreOutIf!`a.empty` Step[] steps;
     ///
-    @serializationIgnoreOutIf!`a.isNull`@serializationTransformOut!`a.get` Nullable!string description;
+    @serializationIgnoreOutIf!`a.empty` string description;
     ///
     @serializationIgnoreOutIf!`a.empty` Examples[] examples;
     ///
@@ -36,13 +32,19 @@ class Scenario : Base
     @serializationIgnore Comment[] comments;
     ///
     @serializationIgnore bool isScenarioOutline;
+    ///
+    @serializationIgnore string uri;
 
     ///
-    this(string keyword, string name, Location location, Feature parent, bool isBackground)
+    this(string keyword, string name, Location location, bool isBackground,
+            string uri, ref Comment[] comments)
     {
         super(keyword, name, location);
-        this.parent = parent;
         this.isBackground = isBackground;
+        this.uri = uri;
+        this.comments = comments.dup;
+        comments = [];
+        this.description = "";
     }
 }
 
@@ -60,7 +62,9 @@ struct Examples
     ///
     @serializationIgnoreOutIf!`a.empty` TableRow[] tableBody;
     ///
-    @serializationIgnoreOutIf!`a.isNull`@serializationTransformOut!`a.get` Nullable!string description;
+    @serializationIgnoreOutIf!`a.empty` string description;
+    ///
+    @serializationIgnore Comment[] comments;
     ///
     @serializationIgnoreOutIf!`a.empty` Tag[] tags;
 
@@ -74,11 +78,12 @@ struct Examples
         this.tableBody = rhs.tableBody.dup;
         this.description = rhs.description;
         this.tags = rhs.tags.dup;
+        this.comments = rhs.comments.dup;
     }
 
     ///
     this(string keyword, string name, Location location, TableRow[] tableRows,
-            Nullable!string description)
+            string description, ref Comment[] comments)
     {
         this.keyword = keyword;
         this.name = name;
@@ -92,5 +97,7 @@ struct Examples
             }
         }
         this.description = description;
+        this.comments = comments.dup;
+        comments = [];
     }
 }

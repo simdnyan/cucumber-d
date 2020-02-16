@@ -3,7 +3,7 @@ module cucumber.formatter.base;
 import std.array : join;
 import std.string : format;
 import std.stdio : write, writeln;
-import std.typecons : Nullable, tuple;
+import std.typecons : tuple;
 
 import cucumber.result : Result, ResultSummary, RunResult, ScenarioResult, StepResult;
 import gherkin : Feature, Scenario, Step, Examples, TableRow, Comment;
@@ -28,9 +28,6 @@ interface Formatter
 
     ///
     void step(Step, StepResult);
-
-    ///
-    void emptyLine();
 
     ///
     void comment(Comment);

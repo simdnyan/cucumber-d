@@ -3,12 +3,11 @@ module gherkin.step;
 import std.array : replace;
 import std.typecons : Nullable;
 
-import asdf : serializationIgnoreOutIf, serializationIgnoreOut;
+import asdf : serializationIgnore, serializationIgnoreOut, serializationIgnoreOutIf;
 import gherkin.comment : Comment;
 import gherkin.datatable : DataTable;
 import gherkin.docstring : DocString;
 import gherkin.location : Location;
-import gherkin.scenario : Scenario;
 
 ///
 struct Step
@@ -20,7 +19,7 @@ struct Step
     ///
     Location location;
     ///
-    @serializationIgnoreOut Scenario parent;
+    @serializationIgnore string uri;
     ///
     string id;
     ///
@@ -29,6 +28,8 @@ struct Step
     @serializationIgnoreOutIf!`a.empty` DataTable dataTable;
     ///
     @serializationIgnoreOut Comment[] comments;
+    ///
+    @serializationIgnore bool isScenarioOutline;
 
     ///
     void replace(string from, string to)
@@ -63,11 +64,13 @@ struct Step
     }
 
     ///
-    this(string keyword, string text, Location location, Scenario parent)
+    this(string keyword, string text, Location location, string uri, ref Comment[] comments)
     {
         this.keyword = keyword;
         this.text = text;
         this.location = location;
-        this.parent = parent;
+        this.uri = uri;
+        this.comments = comments.dup;
+        comments = [];
     }
 }
