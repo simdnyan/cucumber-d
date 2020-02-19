@@ -11,7 +11,7 @@ import std.typecons : Nullable;
 
 import asdf : serializationIgnoreOut, serializationIgnoreOutIf,
     serializationKeyOut, serializationTransformOut;
-import gherkin : Feature, Scenario, Step;
+import gherkin : Feature, Scenario, Step, GherkinTag = Tag;
 
 ///
 enum Result
@@ -46,28 +46,25 @@ mixin template isResult()
 }
 
 ///
-mixin template property(string parent, string type, string key)
+mixin template property(T, string parent, string key)
 {
-    mixin("@property %s %s() const { return %s.%s; }".format(type, key, parent, key));
+    mixin property!(T, parent, key, key);
 }
 
 ///
-mixin template property(string parent, string type, string key, string field)
+mixin template property(T, string parent, string key, string field)
 {
-    mixin("@property %s %s() const { return %s.%s; }".format(type, key, parent, field));
+    mixin("@property %s %s() const { return %s.%s; }".format(T.stringof, key, parent, field));
 }
 
 ///
-mixin template nullableProperty(string parent, string type, string key)
+string createId(string name)
 {
-    mixin("@property %s %s() const { return %s.%s.isNull ? `` :  %s.%s.get; }".format(type,
-            key, parent, key, parent, key));
-}
-
-///
-string createId(Nullable!string name)
-{
-    return name.isNull ? `` : name.get.toLower.tr(` `, `-`);
+    if (name.empty)
+    {
+        return "";
+    }
+    return name.toLower.tr(` `, `-`);
 }
 
 ///
@@ -228,7 +225,7 @@ struct FeatureResult
         assert(0);
     }
 
-    mixin property!("feature.parent", "string", "uri");
+    mixin property!(string, "feature", "uri");
 
     ///
     @property string id()
@@ -236,10 +233,10 @@ struct FeatureResult
         return createId(feature.name);
     }
 
-    mixin property!("feature", "string", "keyword");
-    mixin nullableProperty!("feature", "string", "name");
-    mixin nullableProperty!("feature", "string", "description");
-    mixin property!("feature.location", "ulong", "line");
+    mixin property!(string, "feature", "keyword");
+    mixin property!(string, "feature", "name");
+    mixin property!(string, "feature", "description");
+    mixin property!(ulong, "feature.location", "line");
 
     ///
     @property @serializationIgnoreOutIf!`a.empty` Tag[] tags()
@@ -276,9 +273,9 @@ struct ScenarioResult
     ///
     @serializationIgnoreOut ResultSummary resultSummary;
     ///
-    @serializationIgnoreOut string exampleName;
-    ///
     @serializationIgnoreOut ulong exampleNumber;
+    ///
+    @serializationIgnoreOut GherkinTag[] scenarioTags;
 
     mixin isResult;
 
@@ -300,26 +297,12 @@ struct ScenarioResult
     }
 
     ///
-    @property @serializationTransformOut!`a.get`@serializationIgnoreOutIf!`a.isNull` Nullable!string id()
-    {
-        if (scenario.isBackground)
-        {
-            return Nullable!string();
-        }
-        auto id = createId(scenario.parent.name) ~ `;` ~ createId(scenario.name);
-        if (!scenario.isScenarioOutline)
-        {
-            return Nullable!string(id);
-        }
-        id ~= `;` ~ createId(cast(Nullable!string) exampleName);
-        id ~= `;` ~ (exampleNumber == 0 ? 0 : exampleNumber + 1).to!string;
-        return Nullable!string(id);
-    }
+    @serializationIgnoreOutIf!`a.empty` string id;
 
-    mixin property!("scenario", "string", "keyword");
-    mixin nullableProperty!("scenario", "string", "name");
-    mixin nullableProperty!("scenario", "string", "description");
-    mixin property!("scenario.location", "ulong", "line");
+    mixin property!(string, "scenario", "keyword");
+    mixin property!(string, "scenario", "name");
+    mixin property!(string, "scenario", "description");
+    mixin property!(ulong, "scenario.location", "line");
 
     ///
     @property string type()
@@ -340,8 +323,7 @@ struct ScenarioResult
         {
             return [];
         }
-        return scenario.parent.tags.map!(t => Tag(t.name, t.location.line))
-            .array ~ scenario.tags.map!(t => Tag(t.name, t.location.line)).array;
+        return scenarioTags.map!(t => Tag(t.name, t.location.line)).array;
     }
 
     ///
@@ -367,9 +349,9 @@ struct StepResult
 
     mixin isResult;
 
-    mixin property!("step", "string", "keyword");
-    mixin property!("step", "string", "name", "text");
-    mixin property!("step.location", "ulong", "line");
+    mixin property!(string, "step", "keyword");
+    mixin property!(string, "step", "name", "text");
+    mixin property!(ulong, "step.location", "line");
 
     ///
     @property @serializationIgnoreOutIf!`a.empty` Row[] rows()

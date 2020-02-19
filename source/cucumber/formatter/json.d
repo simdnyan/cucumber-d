@@ -71,12 +71,6 @@ class Json : Formatter
     }
 
     ///
-    override void emptyLine()
-    {
-        // do nothing
-    }
-
-    ///
     override void comment(Comment comment)
     {
         // do nothing

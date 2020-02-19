@@ -1,12 +1,12 @@
 module cucumber.formatter.pretty;
 
 import std.algorithm : max;
-import std.algorithm.iteration : filter, map;
+import std.algorithm.iteration : each, filter, map;
 import std.array : array, empty, join;
 import std.conv : to;
 import std.range : repeat, walkLength;
 import std.stdio : write, writef, writefln, writeln;
-import std.string : leftJustifier, split;
+import std.string : leftJustifier, split, stripLeft;
 import std.typecons : Nullable;
 
 import cucumber.formatter.base : Formatter;
@@ -45,12 +45,14 @@ class Pretty : Formatter
     ///
     override void scenario(ref Scenario scenario)
     {
+        writeln();
         base(scenario, "  ");
     }
 
     ///
     override void examples(Examples examples)
     {
+        writeln();
         base(examples, "    ");
     }
 
@@ -67,6 +69,7 @@ class Pretty : Formatter
     ///
     override void tableRow(TableRow tableRow, ref TableRow[] table, ScenarioResult scenarioResult)
     {
+        tableRow.comments.each!(c => comment(c, "      "));
         with (scenarioResult)
         {
             this.tableRow(tableRow, table,
@@ -90,12 +93,6 @@ class Pretty : Formatter
     }
 
     ///
-    override void emptyLine()
-    {
-        writeln;
-    }
-
-    ///
     override void comment(Comment comment)
     {
         writeln(comment.text);
@@ -116,10 +113,10 @@ class Pretty : Formatter
         {
             foreach (scenarioResult; featureResult.scenarioResults.filter!(x => x.isFailed))
             {
-                auto text = "cucumber " ~ featureResult.feature.parent.uri ~ ":"
+                auto text = "cucumber " ~ featureResult.feature.uri ~ ":"
                     ~ scenarioResult.scenario.location.line.to!string;
                 auto source = scenarioResult.scenario.keyword ~ `: ` ~ (
-                        scenarioResult.scenario.getName);
+                        scenarioResult.scenario.name);
                 if (!scenarioResult.exampleNumber > 0)
                 {
                     source ~= ", Examples (#" ~ scenarioResult.exampleNumber.to!string ~ `)`;
@@ -160,21 +157,23 @@ private:
     ulong scenarioStringLength;
     ulong[] cellSizes;
 
+    void comment(Comment comment, string extraIndent = "")
+    {
+        writeln(extraIndent ~ comment.text.stripLeft);
+    }
+
     void base(T)(T element, string extraIndent = "")
     {
         with (element)
         {
+            comments.each!(c => comment(c, extraIndent));
             if (!tags.empty)
             {
                 writeln(extraIndent, color("skipped"), tags.map!(t => t.name)
                         .join(" "), color("reset"));
             }
             string line = extraIndent ~ keyword ~ ": ";
-            static if (is(typeof(name) == Nullable!string))
-            {
-                line ~= getName;
-            }
-            else static if (is(typeof(element) == Step))
+            static if (is(typeof(element) == Step))
             {
                 line ~= text;
             }
@@ -192,7 +191,7 @@ private:
                 else
                 {
                     write(leftJustifier(line, scenarioStringLength + 4));
-                    write(color("gray"), " # ", element.parent.parent.uri, `:`,
+                    write(color("gray"), " # ", element.uri, `:`,
                             element.location.line.to!string, color("reset"));
                 }
             }
@@ -201,7 +200,7 @@ private:
                 write(line);
             }
             writeln;
-            if (!description.isNull)
+            if (!description.empty)
             {
                 writeln(extraIndent, description);
             }
@@ -210,7 +209,7 @@ private:
 
     void step(Step step, string resultColor, string location)
     {
-        setScenarioStringLength(step.parent);
+        step.comments.each!(c => comment(c, "      "));
         if (noSource)
         {
             write("    ", color(resultColor), step.keyword ~ step.text, color("reset"));
@@ -246,7 +245,7 @@ private:
         {
             return;
         }
-        scenarioStringLength = scenario.keyword.walkLength + scenario.getName.walkLength;
+        scenarioStringLength = scenario.keyword.walkLength + scenario.name.walkLength;
         foreach (step; scenario.steps)
         {
             auto stepStringLength = (step.keyword ~ (step.text)).walkLength;

@@ -3,6 +3,7 @@ module gherkin.datatable;
 import std.array : array, empty, replace;
 
 import asdf : serializationIgnore, serializationIgnoreOutIf;
+import gherkin.comment : Comment;
 import gherkin.location : Location;
 
 ///
@@ -29,6 +30,8 @@ struct TableRow
     Cell[] cells;
     ///
     Location location;
+    ///
+    @serializationIgnore Comment[] comments;
 
     ///
     @serializationIgnore @property bool empty() const
@@ -51,6 +54,7 @@ struct TableRow
         this.id = rhs.id;
         this.cells = rhs.cells.array.dup;
         this.location = rhs.location;
+        this.comments = rhs.comments.dup;
     }
 
     ///
@@ -63,11 +67,13 @@ struct TableRow
     }
 
     ///
-    this(string id, Cell[] cells, Location location)
+    this(string id, Cell[] cells, Location location, ref Comment[] comments)
     {
         this.id = id;
         this.cells = cells.array.dup;
         this.location = location;
+        this.comments = comments.dup;
+        comments = [];
     }
 }
 

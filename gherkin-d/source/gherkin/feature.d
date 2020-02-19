@@ -2,12 +2,9 @@ module gherkin.feature;
 
 import std.algorithm : map;
 import std.array : array;
-import std.json : JSONValue, parseJSON;
-import std.range : empty;
 import std.typecons : Nullable;
 
-import asdf : serializationIgnore, serializationIgnoreOutIf,
-    serializationTransformOut, serializeToJson;
+import asdf : serializationIgnore, serializationIgnoreOutIf;
 import gherkin.base : Base;
 import gherkin.comment : Comment;
 import gherkin.document : GherkinDocument;
@@ -23,7 +20,7 @@ class Feature : Base
     ///
     @serializationIgnore Nullable!Scenario background;
     ///
-    @serializationIgnoreOutIf!`a.isNull`@serializationTransformOut!`a.get` Nullable!string description;
+    @serializationIgnoreOutIf!`a.empty` string description;
     ///
     @serializationIgnoreOutIf!`a.empty` Tag[] tags;
     ///
@@ -31,13 +28,16 @@ class Feature : Base
     ///
     string language = "en";
     ///
-    @serializationIgnore GherkinDocument parent;
+    @serializationIgnore string uri;
 
     ///
-    this(string keyword, string name, Location location, ref GherkinDocument parent)
+    this(string keyword, string name, Location location, string uri, ref Comment[] comments)
     {
         super(keyword, name, location);
-        this.parent = parent;
+        this.uri = uri;
+        this.comments = comments.dup;
+        comments = [];
+        this.description = "";
     }
 
     ///
