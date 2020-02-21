@@ -6,7 +6,7 @@ import std.array : array, empty, join;
 import std.conv : to;
 import std.range : repeat, walkLength;
 import std.stdio : write, writef, writefln, writeln;
-import std.string : leftJustifier, split, stripLeft;
+import std.string : leftJustifier, replace, split, stripLeft;
 import std.typecons : Nullable;
 
 import cucumber.formatter.base : Formatter;
@@ -130,6 +130,7 @@ class Pretty : Formatter
 
         if (!failingScenarios.empty)
         {
+            writeln;
             writeln(color("failed"), "Failing Scenarios:", color("reset"));
 
             foreach (failingScenario; failingScenarios)
@@ -145,9 +146,13 @@ class Pretty : Formatter
                             failingScenario.source, color("reset"));
                 }
             }
+        }
+
+        if (!result.featureResults.empty)
+        {
             writeln;
         }
-        runResult(result);
+        runResult(result, noSource);
     }
 
 private:
@@ -200,9 +205,10 @@ private:
                 write(line);
             }
             writeln;
+
             if (!description.empty)
             {
-                writeln(extraIndent, description);
+                writeln(description);
             }
         }
     }
@@ -225,9 +231,10 @@ private:
         {
             with (step.docString.get)
             {
-                writeln("      ", color(resultColor), delimiter);
-                writeln(content.split("\n").map!(x => "      " ~ x).array.join("\n"));
-                writeln("      ", delimiter, color("reset"));
+                writeln("      ", color(resultColor), `"""`);
+                writeln(content.split("\n").map!(x => x.empty ? `` : ("      " ~ x)).array.join(
+                        "\n"));
+                writeln("      ", `"""`, color("reset"));
             }
         }
         if (!step.dataTable.empty)
@@ -256,6 +263,8 @@ private:
 
     void setCellSize(TableRow[] rows)
     {
+        import std.regex : ctRegex, regexReplace = replace;
+
         if (rows.empty)
         {
             return;
@@ -268,7 +277,9 @@ private:
             {
                 if (!cell.value.empty)
                 {
-                    cellSizes[j] = max(cellSizes[j], cell.value.walkLength);
+                    auto value = cell.value.replace('\\', `\\`).replace("\n",
+                            `\n`).regexReplace(ctRegex!(`(([^\\])\||^\|)`), `$2\|`);
+                    cellSizes[j] = max(cellSizes[j], value.walkLength);
                 }
             }
         }
@@ -276,13 +287,17 @@ private:
 
     string justifyCells(Cell[] cells, string resultColor)
     {
+        import std.regex : ctRegex, regexReplace = replace;
+
         string[] cellStrings;
         foreach (i, cell; cells)
         {
             string cellString;
             if (!cell.value.empty)
             {
-                cellString = color(resultColor) ~ cell.value.leftJustifier(cellSizes[i])
+                auto value = cell.value.replace('\\', `\\`).replace("\n", `\n`)
+                    .regexReplace(ctRegex!(`(([^\\])\||^\|)`), `$2\|`);
+                cellString = color(resultColor) ~ value.leftJustifier(cellSizes[i])
                     .to!string ~ color("reset");
             }
             cellStrings ~= cellString;
@@ -299,5 +314,59 @@ private:
         string message = exception.get.message.split("\n")
             .map!(l => extraIndent ~ l).array.join("\n");
         writefln("%s%s%s", color("failed"), message, color("reset"));
+    }
+}
+
+unittest
+{
+    import std.algorithm : canFind;
+    import std.file : readText;
+    import std.path : baseName;
+    import std.stdio : File, stdout;
+    import unit_threaded.assertions : should;
+    import cucumber.runner : CucumberRunner;
+    import gherkin.util : getFeatureFiles;
+    import gherkin.parser : Parser;
+
+    const auto ignoredFeatureFiles = [
+        // dfmt off
+        "several_examples", // tags over Examples
+        "tags", // tags over Examples
+        "complex_background", // Rule included
+        "i18n_emoji",
+        "i18n_fr",
+        "i18n_no",
+        "minimal-example", // Example (related to Rule) included
+        "padded_example", // Cucumber-Ruby Scenario Outline issue
+        "rule",
+        "rule_without_name_and_description",
+        "scenario_outline", // Cucumber-Ruby Scenario Outline issue
+        "spaces_in_language",
+        // dfmt on
+    ];
+
+    foreach (featureFile; getFeatureFiles([
+                ``, "gherkin-d/cucumber/gherkin/testdata/good/"
+            ]))
+    {
+        if (ignoredFeatureFiles.canFind(baseName(featureFile, ".feature")))
+        {
+            continue;
+        }
+        auto gherkinDocument = Parser.parseFromFile(featureFile);
+        auto formatter = new Pretty(true, true, true);
+        auto runner = new CucumberRunner(formatter, true);
+
+        auto original = stdout;
+        stdout.open("cucumber-d_formatter_pretty.out", "wt");
+        RunResult result;
+        result += runner.runFeature!"cucumber.formatter.pretty"(gherkinDocument);
+        formatter.summarizeResult(result);
+        stdout = original;
+
+        const auto expected = readText("testdata/formatter/pretty/" ~ baseName(featureFile));
+        const auto actual = readText("cucumber-d_formatter_pretty.out");
+        actual.should == expected;
+
     }
 }

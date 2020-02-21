@@ -92,7 +92,7 @@ class CucumberCommandline
 
         formatter.summarizeResult(result);
 
-        immutable auto scenarioResultSummary = result.resultSummaries["scenarios"];
+        immutable auto scenarioResultSummary = result.resultSummaries["scenario"];
         if (strict)
         {
             return scenarioResultSummary.passed == scenarioResultSummary.total ? 0 : 1;

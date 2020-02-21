@@ -74,7 +74,7 @@ class Progress : Formatter
     override void summarizeResult(RunResult result)
     {
         writeln("\n");
-        runResult(result);
+        runResult(result, noSource);
     }
 
 private:
