@@ -10,8 +10,9 @@ matrix:
     - d: dmd-nightly
 
 script:
-  - dub test -b unittest-cov
   - dub test :gherkin-d -b unittest-cov
+  - dub test -b unittest-cov
+  - ./gherkin-d/cucumber-d_gherkin-d --DRT-covopt="merge:1"
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

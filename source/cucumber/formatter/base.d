@@ -57,20 +57,28 @@ interface Formatter
     }
 
     ///
-    final void runResult(RunResult runResult)
+    final void runResult(RunResult runResult, bool noSource)
     {
         string result;
-        foreach (k, v; runResult.resultSummaries)
+        foreach (k; ["scenario", "step"])
         {
+            auto v = runResult.resultSummaries.get(k, ResultSummary());
             result ~= "%s %s".format(v.total, k);
+            if (v.total != 1)
+            {
+                result ~= "s";
+            }
             if (v.total > 0)
             {
                 result ~= " (%s)".format(resultSummary(v));
             }
             result ~= "\n";
         }
-        result ~= runResult.time.toString();
+        if (!noSource)
+        {
+            result ~= runResult.time.toString();
+        }
 
-        writeln(result);
+        write(result);
     }
 }

@@ -148,6 +148,6 @@ unittest
         }
 
         parseJSON(actual).should == parseJSON(
-                readText("testdata/formatter/" ~ baseName(featureFile) ~ `.json`));
+                readText("testdata/formatter/json/" ~ baseName(featureFile) ~ `.json`));
     }
 }

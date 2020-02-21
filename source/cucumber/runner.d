@@ -50,7 +50,10 @@ public:
         auto feature = this.document.feature.get;
         auto featureResult = FeatureResult(feature);
 
-        formatter.feature(feature);
+        if (!feature.scenarios.empty)
+        {
+            formatter.feature(feature);
+        }
 
         foreach (scenario; feature.scenarios)
         {
@@ -88,23 +91,37 @@ public:
     {
         ScenarioResult[] results;
 
-        formatter.scenario(scenario);
-        foreach (step; scenario.steps)
+        if (scenario.examples.empty || (scenario.steps.empty && background.isNull))
         {
-            formatter.step(step, StepResult(step,
-                    scenario.uri ~ `:` ~ step.location.line.to!string, SKIPPED));
+            return results;
+        }
+
+        if (!scenario.steps.empty)
+        {
+            formatter.scenario(scenario);
+            foreach (step; scenario.steps)
+            {
+                formatter.step(step, StepResult(step,
+                        scenario.uri ~ `:` ~ step.location.line.to!string, SKIPPED));
+            }
         }
 
         foreach (examples; scenario.examples)
         {
-            formatter.examples(examples);
+            if (!examples.tableBody.empty && !scenario.steps.empty)
+            {
+                formatter.examples(examples);
+            }
             if (examples.tableHeader.empty)
             {
                 continue;
             }
 
             auto table = examples.tableBody ~ examples.tableHeader;
-            formatter.tableRow(examples.tableHeader, table, "skipped");
+            if (!examples.tableBody.empty && !scenario.steps.empty)
+            {
+                formatter.tableRow(examples.tableHeader, table, "skipped");
+            }
 
             foreach (i, row; examples.tableBody)
             {
@@ -144,7 +161,10 @@ public:
                     results ~= result[0];
                 }
                 results ~= result[1];
-                formatter.tableRow(row, table, result[1]);
+                if (!scenario.steps.empty)
+                {
+                    formatter.tableRow(row, table, result[1]);
+                }
             }
         }
 
@@ -156,15 +176,19 @@ public:
             Scenario scenario, Nullable!Scenario background)
     {
         ScenarioResult backgroundResult;
+        auto result = ScenarioResult(scenario, scenario.uri ~ `:`
+                ~ scenario.location.line.to!string);
 
         if (!background.isNull)
         {
             Nullable!Scenario nullScenario;
             backgroundResult = runScenario!ModuleNames(feature, background.get, nullScenario)[1];
             this.isFirstBackground = false;
+            result.result = backgroundResult.result;
         }
 
-        if ((!scenario.isBackground || this.isFirstBackground) && !scenario.isScenarioOutline)
+        if ((!scenario.isBackground || this.isFirstBackground)
+                && !scenario.isScenarioOutline && !scenario.steps.empty)
         {
             formatter.scenario(scenario);
             // Output failed steps in Background
@@ -172,9 +196,6 @@ public:
                 .filter!(r => r.isFailed)
                 .each!(r => formatter.step(r.step, r));
         }
-
-        auto result = ScenarioResult(scenario, scenario.uri ~ `:`
-                ~ scenario.location.line.to!string);
 
         if (!scenario.isBackground)
         {
@@ -187,7 +208,7 @@ public:
         {
             StepResult stepResult;
 
-            if (result.isPassed && backgroundResult.isPassed)
+            if (result.isPassed)
             {
                 stepResult = runStep!ModuleNames(step);
             }

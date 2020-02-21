@@ -14,10 +14,12 @@
 		{
 			"name": "default",
 			"targetType": "executable",
+			"mainSourceFile": "source/app.d",
 		},
 		{
 			"name": "unittest",
 			"targetType": "executable",
+			"mainSourceFile": "source/app.d",
 			"dependencies": {
 				"unit-threaded:assertions": "~>0.10.4"
 			}

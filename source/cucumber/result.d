@@ -173,15 +173,15 @@ struct RunResult
             }
             this.featureResults ~= val;
             this.time += val.time;
-            if (!("scenarios" in resultSummaries))
-                resultSummaries["scenarios"] = ResultSummary();
-            if (!("steps" in resultSummaries))
-                resultSummaries["steps"] = ResultSummary();
+            if (!("scenario" in resultSummaries))
+                resultSummaries["scenario"] = ResultSummary();
+            if (!("step" in resultSummaries))
+                resultSummaries["step"] = ResultSummary();
 
-            resultSummaries["scenarios"] += val.resultSummary;
+            resultSummaries["scenario"] += val.resultSummary;
             foreach (scenarioResult; val.scenarioResults)
             {
-                resultSummaries["steps"] += scenarioResult.resultSummary;
+                resultSummaries["step"] += scenarioResult.resultSummary;
             }
             return this;
         }
